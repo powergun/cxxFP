@@ -1,3 +1,4 @@
 # C++ Functional Programming
 
-this project is managed by cmake
+Requirements: cmake, C++17
+
