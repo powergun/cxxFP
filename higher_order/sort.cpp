@@ -1,8 +1,5 @@
-//
-// Created by weining on 28/3/20.
-//
-
-#include "test_utilities.h"
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#include "doctest/doctest.h"
 
 #include <iostream>
 #include <algorithm>
@@ -31,18 +28,24 @@ struct Name {
 
 };
 
-int main(int argc, char *argv[]) {
+TEST_CASE("demo: sort vector of int") {
     // source: FP with C++ L528
     std::vector elems{5, 4, 3, 2, 1};
     std::sort(elems.begin(), elems.end());
-    assert_vector_eq(elems, {1, 2, 3, 4, 5});
+    CHECK(elems == std::vector<int>{1, 2, 3, 4, 5});
+}
 
+TEST_CASE("demo: sort vector of Name objects") {
     // FP with C++ L535
-    std::vector names{Name{"e1", "m1"}, Name{"e2", "m2"}};
+    std::vector names{Name{"e3", "m1"}, Name{"e2", "m2"}};
     std::sort(names.begin(), names.end(), [](const Name &lhs, const Name &rhs) {
         return lhs.first < rhs.first;
     });
 
-    // L562
-    assert_vector_eq(names, {{"e1", "m1"}, {"e2", "m2"}});
+    // vector of the same type can be compared using ==
+    // https://thispointer.com/c-how-to-compare-two-vectors-stdequal-comparators/
+    // it uses std::equal template
+    // { return (__x.size() == __y.size()
+    //	      && std::equal(__x.begin(), __x.end(), __y.begin())); }
+    CHECK(names == std::vector<Name>{{"e2", "m2"}, {"e3", "m1"}});
 }

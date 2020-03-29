@@ -1,3 +1,3 @@
-[submodule "tinyCUnit"]
-	path = tinyCUnit
-	url = git@Wei-N-Ning.github.com:Wei-N-Ning/tinyCUnit
+[submodule "doctest"]
+	path = doctest
+	url = https://github.com/onqtam/doctest

@@ -1,22 +1,15 @@
-//
-// Created by weining on 28/3/20.
-//
-
-#include "test_utilities.h"
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#include "doctest/doctest.h"
 
 #include <vector>
 #include <numeric>
-#include <iostream>
 
-void RunTinyTests();
-
-
-void test_sum() {
+TEST_CASE("demo: sum") {
     std::vector<int> elems{1, 2, 3, 4, 5};
-    assert_eq(15, std::accumulate(elems.cbegin(), elems.cend(), 0));
+    CHECK(15 == std::accumulate(elems.cbegin(), elems.cend(), 0));
 }
 
-void test_conditional_sum() {
+TEST_CASE("demo: conditional sum") {
     std::vector<int> elems{1, 2, 3, 4, 5};
     // NOTE:
     // accumulate is NOT foldr as it does not use recursion
@@ -28,10 +21,5 @@ void test_conditional_sum() {
                         // std::cout << acc << ", " << elem << std::endl;
                         return elem % 2 == 0 ? acc + elem : acc;
                     });
-    assert_eq(6, result);
-}
-
-int main(int argc, char *argv[]) {
-    RunTinyTests();
-    return 0;
+    CHECK(6 == result);
 }
