@@ -30,8 +30,9 @@ TEST_CASE("demo: all_of") {
     std::vector<int> elems{1, 2, 3, 4, 5};
     auto r1 = std::all_of(elems.cbegin(), elems.cend(),
                           [](auto elem) { return elem > 0; });
-        CHECK(r1);
+    CHECK(r1);
 
     std::string line{"XXXX"};
     auto r2 = std::all_of(line.cbegin(), line.cend(), [](auto ch) { return ch == 'X'; });
+    CHECK(r2);
 }
