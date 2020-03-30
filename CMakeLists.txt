@@ -11,3 +11,4 @@ target_include_directories(doctest INTERFACE doctest)
 
 add_subdirectory(higher_order)
 add_subdirectory(composition)
+add_subdirectory(type_driven)

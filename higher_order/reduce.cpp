@@ -36,3 +36,6 @@ TEST_CASE("reduce: all_of") {
     auto r2 = std::all_of(line.cbegin(), line.cend(), [](auto ch) { return ch == 'X'; });
     CHECK(r2);
 }
+
+// none_of works in the opposite way: if for each elem, f(elem) is False, then the result is False
+// it can be useful when testing if none of the elements are in some kind of (invalid) state

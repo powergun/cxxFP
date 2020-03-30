@@ -46,6 +46,9 @@ std::vector<int> toRange(int start, int end, int incr=1) {
         start += incr;
     }
     return r;
+
+    // see hands on FP with C++ L2132 for a simplified, increasing-
+    // range implementation using std::iota
 }
 
 TEST_CASE("range: generate range-like vector") {
@@ -54,4 +57,20 @@ TEST_CASE("range: generate range-like vector") {
     CHECK_EQ(Nums{-4, -2}, toRange(-4, 0, 2));
     CHECK_EQ(Nums{7, 4}, toRange(7, 1, -3));
     CHECK_EQ(Nums{}, toRange(0, 0, 1000));
+}
+
+// some creative uses of transform() with std::find_if()
+// inspired by hands on FP with C++ L2312 and
+// http://www.cplusplus.com/reference/algorithm/find_if/
+TEST_CASE("transform: partial rewritten") {
+    using Text = std::string;
+    using Texts = std::vector<Text>;
+    Texts ts{"there", "is", "a", "cow"};
+    auto pos = std::find_if(ts.begin(), ts.end(), [](const Text &t) { return t == "a"; });
+    CHECK_EQ("a", *pos);
+
+    // I made a mistake by writing transform(begin, end, pos, lambda)
+    // this will write to the outside the string vector, causing segfault
+    std::transform(pos, ts.end(), pos, [](Text &t) { return Text{"X"}; });
+    CHECK_EQ(Texts{"there", "is", "X", "X"}, ts);
 }
