@@ -4,12 +4,12 @@
 #include <vector>
 #include <numeric>
 
-TEST_CASE("demo: sum") {
+TEST_CASE("reduce: sum") {
     std::vector<int> elems{1, 2, 3, 4, 5};
     CHECK(15 == std::accumulate(elems.cbegin(), elems.cend(), 0));
 }
 
-TEST_CASE("demo: conditional sum") {
+TEST_CASE("reduce: conditional sum") {
     std::vector<int> elems{1, 2, 3, 4, 5};
     // NOTE:
     // accumulate is NOT foldr as it does not use recursion
@@ -26,7 +26,7 @@ TEST_CASE("demo: conditional sum") {
 
 // apply the predicate f to all the elements and returns the logical AND
 // of these results
-TEST_CASE("demo: all_of") {
+TEST_CASE("reduce: all_of") {
     std::vector<int> elems{1, 2, 3, 4, 5};
     auto r1 = std::all_of(elems.cbegin(), elems.cend(),
                           [](auto elem) { return elem > 0; });

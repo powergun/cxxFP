@@ -5,7 +5,7 @@
 #include <numeric>
 #include <vector>
 
-TEST_CASE("demo: copy vector of int") {
+TEST_CASE("copy: copy vector of int") {
     std::vector elems{5, 4, 3, 2, 1};
 
     // L595 borrow Groovy's approach that uses first class function

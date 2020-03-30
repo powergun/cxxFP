@@ -28,14 +28,14 @@ struct Name {
 
 };
 
-TEST_CASE("demo: sort vector of int") {
+TEST_CASE("sort: sort vector of int") {
     // source: FP with C++ L528
     std::vector elems{5, 4, 3, 2, 1};
     std::sort(elems.begin(), elems.end());
     CHECK(elems == std::vector<int>{1, 2, 3, 4, 5});
 }
 
-TEST_CASE("demo: sort vector of Name objects") {
+TEST_CASE("sort: sort vector of Name objects") {
     // FP with C++ L535
     std::vector names{Name{"e3", "m1"}, Name{"e2", "m2"}};
     std::sort(names.begin(), names.end(), [](const Name &lhs, const Name &rhs) {
