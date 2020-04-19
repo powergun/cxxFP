@@ -19,3 +19,7 @@ target_link_libraries(irange PRIVATE doctest ${Boost_LIBRARIES})
 target_include_directories(irange PRIVATE ${Boost_INCLUDE_DIRS})
 add_test(NAME "range:irange-python-range" COMMAND irange)
 
+add_executable(irange_stdin irange_stdin.cpp)
+target_link_libraries(irange_stdin PRIVATE doctest ${Boost_LIBRARIES})
+target_include_directories(irange_stdin PRIVATE ${Boost_INCLUDE_DIRS})
+

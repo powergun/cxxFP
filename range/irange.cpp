@@ -28,3 +28,11 @@ TEST_CASE ("irange: generator") {
     CHECK_EQ(min_element(m)->second, m[1]);
     CHECK_EQ(m[2], 2);
 }
+
+TEST_CASE ("irange: iteration") {
+    using namespace boost;
+
+    for_each(irange(0, 10), [](const auto &idx) {
+        ; // do index-based things
+    });
+}
