@@ -1,0 +1,32 @@
+# Range
+
+## IRange - Python's range() in C++
+
+source: <https://theboostcpplibraries.com/boost.range-helper-classes-and-functions>
+
+see irange.cpp, for how it enables oneliner in C++
+
+## What is Boost Range
+
+source: <https://theboostcpplibraries.com/boost.range-algorithms>
+
+> You can think of a range as two iterators that refer to the beginning and end 
+> of a group of elements that you can iterate over. Because all containers support 
+> iterators, every container can be thought of as a range
+
+use container as range, see count_elems.cpp
+
+> Since all algorithms from Boost.Range expect a range as a first parameter, a 
+> container like std::vector can be passed directly.
+> This protects you from mistakes
+
+boost/range/algorithm.hpp
+
+> This header file provides access to all of the algorithms for which counterparts 
+> exist in the standard library header file algorithm.
+
+## Boost Adaptor
+
+source: <https://theboostcpplibraries.com/boost.range-adaptors>
+
+lazy evaluation, great for functional composition
