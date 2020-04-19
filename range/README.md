@@ -1,5 +1,7 @@
 # Range
 
+inspired by: hands on functional programming with C++ L/4189
+
 ## IRange - Python's range() in C++
 
 source: <https://theboostcpplibraries.com/boost.range-helper-classes-and-functions>
