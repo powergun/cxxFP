@@ -12,7 +12,11 @@ set(Boost_USE_STATIC_LIBS TRUE)
 set(BOOST_ROOT ${PROJECT_SOURCE_DIR}/vendor/boost-1.72.0)
 find_package(Boost 1.72.0 REQUIRED)
 
+add_library(neither INTERFACE)
+target_include_directories(neither INTERFACE vendor/neither-0.5.0/neither)
+
 add_subdirectory(higher_order)
 add_subdirectory(composition)
-add_subdirectory(type_driven)
+add_subdirectory(maybe)
 add_subdirectory(range)
+add_subdirectory(either)
