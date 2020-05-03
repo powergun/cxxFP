@@ -2,6 +2,12 @@
 
 inspired by: hands on functional programming with C++ L/4189
 
+## Range-v3, C++20
+
+source: <https://github.com/ericniebler/range-v3>
+
+see rangev3.cpp and the official examples
+
 ## IRange - Python's range() in C++
 
 source: <https://theboostcpplibraries.com/boost.range-helper-classes-and-functions>

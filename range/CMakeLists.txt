@@ -23,3 +23,6 @@ add_executable(range_irange_stdin irange_stdin.cpp)
 target_link_libraries(range_irange_stdin PRIVATE doctest ${Boost_LIBRARIES})
 target_include_directories(range_irange_stdin PRIVATE ${Boost_INCLUDE_DIRS})
 
+add_executable(range_range_v3 rangev3.cpp)
+target_link_libraries(range_range_v3 PRIVATE doctest range-v3)
+add_test(NAME "range::range-v3" COMMAND range_range_v3)

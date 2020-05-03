@@ -15,6 +15,8 @@ find_package(Boost 1.72.0 REQUIRED)
 add_library(neither INTERFACE)
 target_include_directories(neither INTERFACE vendor/neither-0.5.0/neither)
 
+add_subdirectory(vendor/range-v3)
+
 add_subdirectory(higher_order)
 add_subdirectory(composition)
 add_subdirectory(maybe)
