@@ -1,0 +1,3 @@
+add_executable(pattern_matching_tuple_unpack tuple_unpack.cpp)
+target_link_libraries(pattern_matching_tuple_unpack PRIVATE doctest)
+add_test(NAME "pattern-matching::tuple-unpack" COMMAND pattern_matching_tuple_unpack)
