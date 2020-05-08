@@ -4,6 +4,7 @@
 #include <optional>
 #include <vector>
 #include <string>
+#include <sstream>
 
 using Texts = std::vector<std::string>;
 using Nums = std::vector<int>;
@@ -32,14 +33,49 @@ OptNums conv(const Texts &ts) {
 
 TEST_CASE("optional: emulate maybe type") {
     auto ns1 = conv({"10", "asd", ""});
-    CHECK(!ns1.has_value());
+        CHECK(!ns1.has_value());
+    // c++ stl cookbook P/341
+    // instead of always writing has_value(), we can also write if(x) {}
+        CHECK_FALSE(ns1);
 
     auto ns2 = conv({"999999999999999999999999999999999999999999999", "99"});
-    CHECK(!ns2.has_value());
+        CHECK(!ns2.has_value());
 
     auto ns3 = conv({"1", "3", "7"});
-    CHECK(ns3.has_value());
-    CHECK_EQ(Nums{1, 3, 7}, ns3);
+        CHECK(ns3.has_value());
+        CHECK_EQ(Nums{1, 3, 7}, ns3);
+}
 
+TEST_CASE ("optional fallback") {
     // check out value_or() method!
+    auto ns1 = conv({","}).value_or(Nums{});
+    CHECK_EQ(0, ns1.size());
+
+    auto ns2 = conv({"1", "2"}).value_or(Nums{});
+    CHECK_EQ(2, ns2.size());
+    CHECK_EQ(Nums{1, 2}, ns2);
+}
+
+struct Item {
+    std::size_t sz{};
+    double weight{};
+};
+
+std::optional<Item> parse(std::istream &is) {
+    Item i;
+    if (is >> i.sz >> i.weight) {
+        return i;
+    }
+    return {};
+}
+
+TEST_CASE ("optional wraps struct") {
+    // if we have a struct foo {} type and want to access one of its members
+    // through an optional<Foo> value, then we can write x->a
+    std::stringstream ss{"102 3.13"};
+    if (auto v = parse(ss); v) {
+        CHECK_EQ(v->sz, 102);
+    } else {
+        CHECK(false);
+    }
 }
