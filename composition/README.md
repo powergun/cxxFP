@@ -8,6 +8,14 @@ however there are still techniques that emulate the composition operator in c++
 
 hands on FP with C++: L1408
 
-## Partial Application using bind
+## Partial Application 
+
+### Using std::bind
 
 hands on FP with C++: L1639
+
+### Using lambda (return lambda function)
+
+see partial_application.cpp.
+
+it helps to implement robust zip-tuple function template
