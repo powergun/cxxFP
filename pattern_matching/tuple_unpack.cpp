@@ -7,6 +7,7 @@
 #include <unordered_map>
 
 // inspired by c++17 stl cookbook P/13
+// also mentioned P/344
 
 TEST_CASE ("unpack pair") {
     using namespace std;
