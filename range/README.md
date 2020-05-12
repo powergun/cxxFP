@@ -8,6 +8,16 @@ source: <https://github.com/ericniebler/range-v3>
 
 see rangev3.cpp and the official examples
 
+### Range piping & "Consume" a Range
+
+see rangev3_piping.cpp; see the reasoning on when and where a range is "exercised"
+
+### Range view algorithms vs STL (mutable) algorithms
+
+see: rangev3_perf.cpp
+
+the regionally mutable STL algorithm is 10x faster; but the range view offers FP purity
+
 ## IRange - Python's range() in C++
 
 source: <https://theboostcpplibraries.com/boost.range-helper-classes-and-functions>

@@ -26,3 +26,11 @@ target_include_directories(range_irange_stdin PRIVATE ${Boost_INCLUDE_DIRS})
 add_executable(range_range_v3 rangev3.cpp)
 target_link_libraries(range_range_v3 PRIVATE doctest range-v3)
 add_test(NAME "range::range-v3" COMMAND range_range_v3)
+
+add_executable(range_range_v3_piping rangev3_piping.cpp)
+target_link_libraries(range_range_v3_piping PRIVATE doctest range-v3)
+add_test(NAME "range::range-v3-piping" COMMAND range_range_v3_piping)
+
+add_executable(range_range_v3_perf rangev3_perf.cpp)
+target_link_libraries(range_range_v3_perf PRIVATE doctest range-v3)
+add_test(NAME "range::range-v3-performance" COMMAND range_range_v3_perf)
