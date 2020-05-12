@@ -18,6 +18,16 @@ see: rangev3_perf.cpp
 
 the regionally mutable STL algorithm is 10x faster; but the range view offers FP purity
 
+however this is the not the end of FP and purism, read:
+
+modern c++ programming cookbook L5072
+
+> some compilers such as GCC, provide attributes that help the compiler optimize
+> the code, for example `[[gnu:pure]]` attribute tells the compiler that the 
+> function can be considered a pure function
+> this will reassure the compiler that the function does not access any global
+> variable and that the functions' result depends solely on its input
+
 ## IRange - Python's range() in C++
 
 source: <https://theboostcpplibraries.com/boost.range-helper-classes-and-functions>

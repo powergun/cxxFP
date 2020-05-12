@@ -65,6 +65,10 @@ namespace Item {
                              | ranges::views::filter([](const auto &i) { return i.value > 2; });
         // range is lazy evaluated, meaning that at this stage, transform() and filter does not take effect
         // counter remains 6 (no new object creation/deletion activities)
+        //
+        // also read: modern c++ programming cookbook L5048
+        // filter: apply the pred function at incr/decr op
+        // transform: apply the function at elem-read op
         CHECK_EQ(6, creation);
         CHECK_EQ(0, deletion);
 
