@@ -1,5 +1,12 @@
 
-// can not include <concept> header
+// with clang-10, I can not include <concept> header
+
+// modern c++ programming cookbook L4615
+// a constraint is a way to specify requirements for template arguments, and
+// as follows, a concept is a set of constraints
+// use the && operator to combine several concepts into one
+
+// see also: https://en.cppreference.com/w/cpp/experimental/constraints
 
 #include <iostream>
 
