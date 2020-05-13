@@ -25,3 +25,33 @@ TEST_CASE ("demo: compose by template") {
     // the compiler error
     CHECK_EQ(10, compose2([](auto x) { return x + 3; }, [](auto x) { return x + 7; })(0));
 }
+
+// modern c++ programming cookbook L3628
+// implement a composition operator
+
+template<typename F, typename G>
+auto compose(F &&f, G &&g) {
+    return [=](auto x) { return f(g(x)); };
+}
+
+template<typename F, typename G>
+auto operator*(F &&f, G &&g) {
+    return compose(std::forward<F>(f), std::forward<G>(g));
+}
+
+//template<typename F, typename... R>
+//auto compose(F &&f, R &&...r) {
+//    return [=](auto x) { return f(compose(r...)(x)); };
+//}
+//
+//template<typename F, typename... R>
+//auto operator*(F &&f, R &&... r) {
+//    return compose(std::forward<F>(f), r...);
+//}
+
+TEST_CASE ("function composition operator") {
+    auto f = [](int n) { return n + 1; }
+           * [](int n) { return n * 10; };
+    // f . g $ 5
+    CHECK_EQ(f(5), 51);
+}
