@@ -8,6 +8,9 @@ however there are still techniques that emulate the composition operator in c++
 
 hands on FP with C++: L1408
 
+see: compose.cpp for an implementation of the haskell-like
+`.` operator (operator*), source: modern c++ programming cookbook
+
 ## Partial Application 
 
 ### Using std::bind

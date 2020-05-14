@@ -39,19 +39,22 @@ auto operator*(F &&f, G &&g) {
     return compose(std::forward<F>(f), std::forward<G>(g));
 }
 
-//template<typename F, typename... R>
-//auto compose(F &&f, R &&...r) {
-//    return [=](auto x) { return f(compose(r...)(x)); };
-//}
-//
-//template<typename F, typename... R>
-//auto operator*(F &&f, R &&... r) {
-//    return compose(std::forward<F>(f), r...);
-//}
+template<typename F, typename... R>
+auto compose(F &&f, R &&...r) {
+    return [=](auto x) { return f(compose(r...)(x)); };
+}
 
 TEST_CASE ("function composition operator") {
-    auto f = [](int n) { return n + 1; }
-           * [](int n) { return n * 10; };
+    auto f1 = [](int n) { return n + 1; }
+            * [](int n) { return n * 10; }
+            * [](int n) { return (n > 10) ? 10 : n; };
     // f . g $ 5
-    CHECK_EQ(f(5), 51);
+    CHECK_EQ(f1(15), 101);
+
+    auto f2 = compose(
+        [](int n) { return n + 1; },
+        [](int n) { return n * 10; },
+        [](int n) { return (n > 10) ? 10 : n; }
+        );
+    CHECK_EQ(f2(15), 101);
 }
