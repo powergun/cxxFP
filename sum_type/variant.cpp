@@ -11,12 +11,19 @@
 #include <algorithm>
 
 // c++ stl cookbook P/359
+// there are a few visitor types - the most haskell-like one is the
+// visitor class; there are also the effectful visitor and the single-
+// return type visitor
+// see: modern c++ programming cookbook L5855
 
 struct AdminLock {
+    int v{12};
 };
 struct UserLock {
+    int v{122};
 };
 struct OperatorLock {
+    int v{1};
 };
 
 using SecurityLock = std::variant<
@@ -89,3 +96,31 @@ TEST_CASE ("count num variants") {
 //        }
 //    }
 //}
+
+TEST_CASE ("effectful visitor: must be void") {
+    auto locks = {SecurityLock(AdminLock{}),
+                  SecurityLock(UserLock{}),
+                  SecurityLock(OperatorLock{})};
+    using namespace std;
+    auto f = [](const auto &lock) {
+        cout << typeid(lock).name() << endl;
+    };
+    for (const auto &l : locks) {
+        visit(f, l);
+    }
+}
+
+TEST_CASE ("single return type visitor") {
+    auto locks = {SecurityLock(AdminLock{}),
+                  SecurityLock(UserLock{}),
+                  SecurityLock(OperatorLock{})};
+    using namespace std;
+    int sum{0};
+    auto f = [](const auto &lock) {
+        return lock.v;
+    };
+    for (const auto &l : locks) {
+        sum += visit(f, l);
+    }
+    CHECK(sum > 0);
+}
