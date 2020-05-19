@@ -26,3 +26,5 @@ add_subdirectory(pattern_matching)
 add_subdirectory(sum_type)
 add_subdirectory(lambda)
 add_subdirectory(func_application)
+add_subdirectory(stream)
+
