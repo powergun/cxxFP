@@ -37,17 +37,24 @@ using SecurityLock = std::variant<
 // the function object must implement different overloads for ALL the
 // possible types the variant can hold
 //
+struct ProcessResult {
+    bool ok{true};
+};
+
 struct ProcessSecurityLock {
-    void operator()(const AdminLock &al) {
+    ProcessResult operator()(const AdminLock &al) {
         std::cout << "process: admin lock" << std::endl;
+        return {};
     }
 
-    void operator()(const UserLock &ul) {
+    ProcessResult operator()(const UserLock &ul) {
         std::cout << "process: user lock" << std::endl;
+        return {};
     }
 
-    void operator()(const OperatorLock &ol) {
+    ProcessResult operator()(const OperatorLock &ol) {
         std::cout << "process: operator lock" << std::endl;
+        return {};
     }
 };
 
@@ -55,7 +62,8 @@ TEST_CASE ("the FP-way of dealing with variant") {
     for (const auto &l : {SecurityLock(AdminLock{}),
                           SecurityLock(UserLock{}),
                           SecurityLock(OperatorLock{})}) {
-        std::visit(ProcessSecurityLock{}, l);
+        auto res = std::visit(ProcessSecurityLock{}, l);
+        CHECK(res.ok);
     }
 }
 
@@ -109,6 +117,14 @@ TEST_CASE ("effectful visitor: must be void") {
         visit(f, l);
     }
 }
+
+// c++ template: complete guide L21438
+// the book gives a pattern on how to handle the result type:
+// the VisitResult computation occurs in two stages:
+// first, VisitElementResult computes the result type produced when
+// calling the visitor with a value of type T
+// next the computation uses the Accumulate algorithm to apply the
+// common-type computation
 
 TEST_CASE ("single return type visitor") {
     auto locks = {SecurityLock(AdminLock{}),
