@@ -27,4 +27,5 @@ add_subdirectory(sum_type)
 add_subdirectory(lambda)
 add_subdirectory(func_application)
 add_subdirectory(stream)
+add_subdirectory(product_type)
 
