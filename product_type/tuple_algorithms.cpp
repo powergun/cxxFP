@@ -36,6 +36,13 @@ auto reverse(const std::tuple<Elements...> &tu) {
     return reverse_impl(tu, std::make_index_sequence<sizeof...(Elements)>{});
 }
 
+// c++ template: complete guide L20266
+// the select-idiom
+template<typename... Elements, std::size_t... Indices>
+auto select(const std::tuple<Elements...> &tu, std::index_sequence<Indices...>) {
+    return std::make_tuple(std::get<Indices>(tu)...);
+}
+
 TEST_CASE ("test std::integer_sequence") {
     using namespace std;
 
@@ -51,6 +58,30 @@ TEST_CASE ("reverse tuple") {
     std::apply([](const auto &... elements) {
         ((cout << elements << " "), ...);
     }, rtu);
+    cout << endl;
     CHECK_EQ(make_tuple(1.0, false, 'x', 10), rtu);
 }
 
+TEST_CASE ("select-idiom") {
+    using namespace std;
+
+    auto tu{make_tuple(10, 'x', false, 1.0)};
+
+    // c++ template: complete guide L20266
+    auto tu_{select(tu, std::index_sequence<0, 2>{})};
+    CHECK_EQ(tu_, make_tuple(10, false));
+
+    // splat()
+    auto tuSplat{select(tu, std::index_sequence<2, 2, 2, 2>{})};
+    CHECK_EQ(tuSplat, make_tuple(false, false, false, false));
+
+}
+
+TEST_CASE ("tuple cat") {
+    using namespace std;
+
+    auto tu{make_tuple(10, 'x', false, 1.0)};
+    auto tux2{std::tuple_cat(tu, tu)};
+
+    CHECK_EQ(tux2, make_tuple(10, 'x', false, 1.0, 10, 'x', false, 1.0));
+}
