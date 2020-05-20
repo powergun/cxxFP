@@ -62,4 +62,9 @@ TEST_CASE ("print tuple") {
 TEST_CASE ("visit tuple elements") {
     // it doesn't matter if visitor function F has all the overloads
     // the visit function can only instantiate (the first) one
+
+    // the difference in print-tuple function is that, operator<<
+    // refers to the free functions for each Element type, it is
+    // not threaded by the recursive call chain (i.e. passing the
+    // function object into the function template)
 }
