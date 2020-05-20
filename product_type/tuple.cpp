@@ -40,6 +40,16 @@ std::ostream &operator<<(std::ostream &os, const std::tuple<Elements...> &tu) {
     return os;
 }
 
+// NOTE: this WON'T WORK!!
+// it doesn't matter if visitor function F has all the overloads
+// the visit function can only instantiate (the first) one
+// see: tuple_apply.cpp
+
+// the difference in print-tuple function is that, operator<<
+// refers to the free functions for each Element type, it is
+// not threaded by the recursive call chain (i.e. passing the
+// function object into the function template)
+
 // base case
 template<std::size_t Index = 0, typename F, typename... Elements>
 std::enable_if_t<(Index == sizeof...(Elements))>
@@ -59,12 +69,9 @@ TEST_CASE ("print tuple") {
     CHECK_EQ(oss.str(), "<1, a, asd, 0>");
 }
 
-TEST_CASE ("visit tuple elements") {
-    // it doesn't matter if visitor function F has all the overloads
-    // the visit function can only instantiate (the first) one
-
-    // the difference in print-tuple function is that, operator<<
-    // refers to the free functions for each Element type, it is
-    // not threaded by the recursive call chain (i.e. passing the
-    // function object into the function template)
+TEST_CASE ("tuple is mutable") {
+    using namespace std;
+    auto tu = make_tuple(1, 'a');
+    std::get<1>(tu) = 'z';  // !!!! std::tuple is mutable
+    CHECK_EQ('z', std::get<1>(tu));
 }
