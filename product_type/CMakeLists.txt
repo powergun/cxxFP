@@ -9,3 +9,9 @@ add_test(NAME "product-type::tuple-apply" COMMAND product_type_tuple_apply)
 
 add_executable(product_type_tuple_int_sequence integer_sequence.cpp)
 add_test(NAME "product-type::tuple-integer-sequence" COMMAND product_type_tuple_int_sequence)
+
+add_executable(product_type_tuple_algorithms tuple_algorithms.cpp)
+target_link_libraries(product_type_tuple_algorithms PRIVATE doctest)
+add_test(NAME "product-type::tuple-algorithms" COMMAND product_type_tuple_algorithms)
+
+
