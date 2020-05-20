@@ -23,7 +23,7 @@
 // forwarding reference to const reference, but the idea stays the same:
 // use fold expression and constexpr arithmetic to calculate the reverse
 // index list, then use the select-idiom (explained c++ template: complete guide)
-// to project the solution on to the original tuple.
+// to project the solution - the new order - onto the original tuple.
 template<typename... Elements, size_t... Indices>
 auto reverse_impl(const std::tuple<Elements...> &tu, std::index_sequence<Indices...>) {
     //                                                            0 1 2 3
