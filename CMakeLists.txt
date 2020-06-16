@@ -1,4 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
+
+set(CMAKE_C_COMPILER gcc-9)
+set(CMAKE_CXX_COMPILER g++-9)
+
 project(cxxFP)
 
 set(CMAKE_CXX_STANDARD 17)
