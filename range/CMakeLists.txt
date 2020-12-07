@@ -34,3 +34,7 @@ add_test(NAME "range::range-v3-piping" COMMAND range_range_v3_piping)
 add_executable(range_range_v3_perf rangev3_perf.cpp)
 target_link_libraries(range_range_v3_perf PRIVATE doctest range-v3)
 add_test(NAME "range::range-v3-performance" COMMAND range_range_v3_perf)
+
+add_executable(range_map_as_pipe map_as_pipe.cpp)
+target_link_libraries(range_map_as_pipe PRIVATE doctest range-v3)
+add_test(NAME "range::map-as-pipe" COMMAND range_map_as_pipe)
