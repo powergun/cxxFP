@@ -29,9 +29,9 @@ std::vector< int > count_lines_in_files( const std::vector< std::string > &filen
 
 TEST_CASE( "use pipe operator to express fmap" )
 {
-    auto cloc = count_lines_in_files({"/etc/passwd", "/etc/passwd", "/etc/passwd"});
-    CHECK_EQ(cloc.size(), 3);
-    CHECK(cloc[0] == cloc[2]);
-    CHECK(cloc[0] == cloc[1]);
-    CHECK_GT(cloc[0], 10);
+    auto cloc = count_lines_in_files( { "/etc/passwd", "/etc/passwd", "/etc/passwd" } );
+    CHECK_EQ( cloc.size(), 3 );
+    CHECK( cloc[ 0 ] == cloc[ 2 ] );
+    CHECK( cloc[ 0 ] == cloc[ 1 ] );
+    CHECK_GT( cloc[ 0 ], 10 );
 }
