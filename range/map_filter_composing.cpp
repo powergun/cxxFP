@@ -17,6 +17,10 @@
 
 // the range library overcomes this issue by providing the pipe operator and views
 
+// however this is not a design flaw in STL; the merits of the iterator-based algorithms allow
+// the user to work with different collection types simultaneously; for example the source collection
+// can be a std::unordered_set<> while the dest collection can be a deque.
+
 struct Item
 {
     std::string name;
