@@ -3,8 +3,9 @@
 //
 // FP in C++ P/7
 // the intro section compares the imperative impl of git_cloc (count lines per file) with the FP
-// one; the latter uses the STL transform and subsequently range-v3's pipe operator this example
-// shows how to use the pipe operator from the range library
+// one; the latter uses the STL transform and subsequently range-v3's pipe operator;
+// this example shows how to use the pipe operator from the range library - how to construct views
+// and consume the views
 
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 
@@ -27,11 +28,24 @@ std::vector< int > count_lines_in_files( const std::vector< std::string > &filen
     return filenames | views::transform( count_lines ) | to< std::vector >;
 }
 
-TEST_CASE( "use pipe operator to express fmap" )
+int total_lines( const std::vector< std::string > &filenames )
+{
+    using namespace ranges;
+    return accumulate( filenames | views::transform( count_lines ), 0 );
+}
+
+TEST_CASE(
+    "use pipe operator to express fmap (views); use ranges::to to consume the result (views)" )
 {
     auto cloc = count_lines_in_files( { "/etc/passwd", "/etc/passwd", "/etc/passwd" } );
     CHECK_EQ( cloc.size(), 3 );
     CHECK( cloc[ 0 ] == cloc[ 2 ] );
     CHECK( cloc[ 0 ] == cloc[ 1 ] );
     CHECK_GT( cloc[ 0 ], 10 );
+}
+
+TEST_CASE( " use ranges::accumulate to consume the result (views)" )
+{
+    auto cloc = total_lines( { "/etc/passwd", "/etc/passwd", "/etc/passwd" } );
+    CHECK_GT( cloc, 30 );
 }
