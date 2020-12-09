@@ -1,0 +1,4 @@
+
+add_executable(functor_function_lifting function_lifting.cpp)
+target_link_libraries(functor_function_lifting PRIVATE doctest)
+add_test(NAME "functor::function_lifting" COMMAND functor_function_lifting)

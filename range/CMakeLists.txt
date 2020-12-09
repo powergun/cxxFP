@@ -42,3 +42,7 @@ add_test(NAME "range::map-as-pipe" COMMAND range_map_as_pipe)
 add_executable(range_map_filter_composing map_filter_composing.cpp)
 target_link_libraries(range_map_filter_composing PRIVATE doctest range-v3)
 add_test(NAME "range::map-filter-composing" COMMAND range_map_filter_composing)
+
+add_executable(range_schwartzian_transform schwartzian_transform.cpp)
+target_link_libraries(range_schwartzian_transform PRIVATE doctest range-v3)
+add_test(NAME "range::perl_schwartzian_transform" COMMAND range_schwartzian_transform)

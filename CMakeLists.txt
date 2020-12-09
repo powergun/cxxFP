@@ -33,4 +33,4 @@ add_subdirectory(func_application)
 add_subdirectory(stream)
 add_subdirectory(product_type)
 add_subdirectory(recursion)
-
+add_subdirectory(functor)

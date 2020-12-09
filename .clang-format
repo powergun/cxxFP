@@ -11,7 +11,7 @@ BasedOnStyle: Google
 # indent case labels  one level from the switch statement
 IndentCaseLabels: true
 
-ColumnLimit: 100
+ColumnLimit: 90
 IndentWidth: 4
 
 # useful
