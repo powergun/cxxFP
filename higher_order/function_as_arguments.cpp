@@ -117,3 +117,14 @@ TEST_CASE( "forwarding reference and generic lambda function" )
         lApply( fRefValue, x );
     }
 }
+
+TEST_CASE ("template parameter list for generic lambda (C++20)") {
+    // FP in C++ P/61
+    // generic lambda now supports template parameter list; however this requires the compiler (gcc)
+    // to support this C++20 feature; I have not tested this on clang
+
+    // note: compile fine with gcc-9
+    //    auto ff = []< typename T >( T a ) -> T { return a + 1; };
+    //    ff(1);
+
+}

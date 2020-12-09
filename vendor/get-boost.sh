@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+echo "STOP! Check your gcc version!!!! (and temporarily unlink/relink to the correct version)"
+# read:
+# https://askubuntu.com/questions/26498/how-to-choose-the-default-gcc-and-g-version
+exit 1
+
 set -euo pipefail
 
 # parameters
