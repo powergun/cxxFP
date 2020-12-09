@@ -23,6 +23,6 @@ target_link_libraries(higher_order_lambda_member_variables PRIVATE doctest range
 add_test(NAME "cxxFP::higher_order::lambda_member_variables" COMMAND higher_order_lambda_member_variables)
 
 add_executable(higher_order_boost_phoenix boost_phoenix_simple.cpp)
-target_link_libraries(higher_order_boost_phoenix PRIVATE doctest)
+target_link_libraries(higher_order_boost_phoenix PRIVATE doctest range-v3)
 target_include_directories(higher_order_boost_phoenix PRIVATE ${Boost_INCLUDE_DIRS})
 add_test(NAME "cxxFP::higher_order::boost_phoenix_demo" COMMAND higher_order_boost_phoenix)

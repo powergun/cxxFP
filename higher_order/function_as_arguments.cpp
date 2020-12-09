@@ -27,6 +27,11 @@
 
 // this is also the core of "perfect forwarding" - recall this section in Modern Effective C++
 
+// FP in C++ P/69
+// I should avoid using this style, instead I should take the approach shown in the second example:
+// template< typename Function, typename Object ... >
+// std::function<> resolves the types at runtime using something virtual-table look up;
+// it has performance impact.
 template < typename T, typename R >
 R apply( std::function< R( T ) > f, T t )
 {
