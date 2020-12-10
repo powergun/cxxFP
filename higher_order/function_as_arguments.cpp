@@ -32,6 +32,12 @@
 // template< typename Function, typename Object ... >
 // std::function<> resolves the types at runtime using something virtual-table look up;
 // it has performance impact.
+
+// also mentioned in the later `laziness` chapter P/123
+// the most efficient way to accept an arbitrary function object is as a template param
+// you don't need to specify the resulting type as a template param because it can be
+// easily deduced from the computation (requiring C++17)
+
 template < typename T, typename R >
 R apply( std::function< R( T ) > f, T t )
 {
