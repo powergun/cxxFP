@@ -65,6 +65,9 @@ void populate( std::vector< int > &v )
 
 TEST_CASE( "simple comparison" )
 {
+    // NOTE: this is not fair - the version that uses range-v3 also calls std::copy which
+    // brings considerable overhead!
+    // see the more detailed comparison below under different categories (immut, mut etc.)
     std::vector< int > v( 1000000 );
     std::vector< int > o( 1000000 );
     populate( v );
@@ -76,8 +79,9 @@ TEST_CASE( "read only operation and immutable data" )
 {
     // range wins:
     //
-    //   readonly operator and immutable data: stl 266,566 micro-secs
-    //  readonly operator and immutable data: range 11,693 micro-secs
+    //     readonly operator and immutable data: stl 259,318 micro-secs
+    //    readonly operator and immutable data: range 11,311 micro-secs
+    // readonly operator and immutable data: for-loop 12,635 micro-secs
     //
     using namespace ranges;
     constexpr size_t n = 1000000;
@@ -96,6 +100,22 @@ TEST_CASE( "read only operation and immutable data" )
             std::copy_if( xs.cbegin(), xs.cend(), os.begin(), []( const auto &x ) {
                 return x > 100;
             } );
+            CHECK_EQ( os.size(), n );
+        }
+    }
+    {
+        std::vector< int > os( xs.size() );
+        {
+            // raw for-loop
+            AutoTimer atm( "readonly operator and immutable data: for-loop" );
+            auto it = os.begin();
+            for ( const auto &x : xs )
+            {
+                if ( x > 100 )
+                {
+                    *( it++ ) = x;
+                }
+            }
             CHECK_EQ( os.size(), n );
         }
     }
