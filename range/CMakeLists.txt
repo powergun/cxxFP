@@ -54,3 +54,7 @@ add_test(NAME "range::actions" COMMAND range_actions)
 add_executable(range_delimited range_delimited.cpp)
 target_link_libraries(range_delimited PRIVATE doctest range-v3)
 add_test(NAME "range::delimited_ranges" COMMAND range_delimited)
+
+add_executable(range_stream_processing stream_range.cpp)
+target_link_libraries(range_stream_processing PRIVATE doctest range-v3)
+add_test(NAME "range::stream_processing" COMMAND range_stream_processing)
