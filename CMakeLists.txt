@@ -8,6 +8,8 @@ project(cxxFP)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# dependencies:
+
 add_subdirectory(vendor/doctest)
 enable_testing()
 
@@ -18,21 +20,12 @@ find_package(Boost 1.72.0 REQUIRED)
 
 add_library(neither INTERFACE)
 target_include_directories(neither INTERFACE vendor/neither-0.5.0/neither)
-
 add_subdirectory(vendor/range-v3)
 
-add_subdirectory(higher_order)
-add_subdirectory(composition)
-add_subdirectory(maybe)
-add_subdirectory(range)
-add_subdirectory(either)
-add_subdirectory(pattern_matching)
-add_subdirectory(sum_type)
-add_subdirectory(lambda)
-add_subdirectory(func_application)
-add_subdirectory(stream)
-add_subdirectory(product_type)
-add_subdirectory(recursion)
+# sub projects:
+
+add_subdirectory(semantics)
+add_subdirectory(types)
 add_subdirectory(functor)
-add_subdirectory(immutability)
 add_subdirectory(lazy_evaluation)
+add_subdirectory(data_structures)

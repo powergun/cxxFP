@@ -5,8 +5,9 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest/doctest.h"
 #include <optional>
+#include <functional>
 #include <random>
-#include "../vendor/auto_timer.h"
+#include "../../vendor/auto_timer.h"
 
 // FP in c++ P/124
 // there are a few brilliant points:
