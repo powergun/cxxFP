@@ -25,13 +25,13 @@
 
 // decltype(auto) is the decltype of the returned expression
 
-// this is also the core of "perfect forwarding" - recall this section in Modern Effective C++
+// this is also the core of "perfect forwarding" - recall this section in Modern Effective
+// C++
 
 // FP in C++ P/69
-// I should avoid using this style, instead I should take the approach shown in the second example:
-// template< typename Function, typename Object ... >
-// std::function<> resolves the types at runtime using something virtual-table look up;
-// it has performance impact.
+// I should avoid using this style, instead I should take the approach shown in the second
+// example: template< typename Function, typename Object ... > std::function<> resolves
+// the types at runtime using something virtual-table look up; it has performance impact.
 
 // also mentioned in the later `laziness` chapter P/123
 // the most efficient way to accept an arbitrary function object is as a template param
@@ -83,9 +83,9 @@ TEST_CASE( "use decltype(auto) to pass function-value's return value back to the
 
 // another core technique is universal reference (aka forwarding reference)
 // FP in C++ P/48
-// provide a generic function that takes f which is a function that "works on the given object o";
-// however, it is not known whether o will be a mutable ref or immutable
-// and this is where forwarding-reference handles both situation gracefully
+// provide a generic function that takes f which is a function that "works on the given
+// object o"; however, it is not known whether o will be a mutable ref or immutable and
+// this is where forwarding-reference handles both situation gracefully
 
 template < typename Object, typename Function >
 decltype( auto ) applyTo( Function f, Object &&o )
@@ -98,7 +98,8 @@ int fConstRefValue( const int &x )
     return x + 1;
 }
 
-TEST_CASE( "use forwarding/universal reference to overcome the const-or-non-const ref issue" )
+TEST_CASE(
+    "use forwarding/universal reference to overcome the const-or-non-const ref issue" )
 {
     int x = 1;
     auto o1 = applyTo( fConstRefValue, x );
@@ -109,13 +110,11 @@ TEST_CASE( "use forwarding/universal reference to overcome the const-or-non-cons
 }
 
 // FP in c++ P/60
-// NOTE, perfect forwarding works slightly differently with generic lambda, which does not have
-// the name of the type (it is auto instead)
-// the generic lambda is a class with a template member function operator()(); itself is not a
-// class template
-// the lambda will deduce the type for each of its arguments that were declared
-// as auto when it is called, not when it is constructed;
-// the same lambda can be used on completely different types;
+// NOTE, perfect forwarding works slightly differently with generic lambda, which does not
+// have the name of the type (it is auto instead) the generic lambda is a class with a
+// template member function operator()(); itself is not a class template the lambda will
+// deduce the type for each of its arguments that were declared as auto when it is called,
+// not when it is constructed; the same lambda can be used on completely different types;
 TEST_CASE( "forwarding reference and generic lambda function" )
 {
     auto lApply = []( auto f, auto &&o ) -> decltype( auto ) {
@@ -129,13 +128,29 @@ TEST_CASE( "forwarding reference and generic lambda function" )
     }
 }
 
-TEST_CASE ("template parameter list for generic lambda (C++20)") {
+TEST_CASE( "template parameter list for generic lambda (C++20)" )
+{
     // FP in C++ P/61
-    // generic lambda now supports template parameter list; however this requires the compiler (gcc)
-    // to support this C++20 feature; I have not tested this on clang
+    // generic lambda now supports template parameter list; however this requires the
+    // compiler (gcc) to support this C++20 feature; I have not tested this on clang
 
     // note: compile fine with gcc-9
     //    auto ff = []< typename T >( T a ) -> T { return a + 1; };
     //    ff(1);
+}
 
+inline int f( int x )
+{
+    return x + 1;
+}
+
+TEST_CASE( "use inlined function with STL algorithm" )
+{
+    std::vector< int > xs( 100, 0 );
+    std::transform( xs.cbegin(), xs.cend(), xs.begin(), f );
+
+    // however this post states that only function object may benefit from trivial-inlining:
+    // https://stackoverflow.com/questions/1027610/using-stl-algorithms-is-it-better-to-pass-a-function-pointer-or-a-functor
+
+    // I should experiment with both approaches. Test this on gcc and clang.
 }
