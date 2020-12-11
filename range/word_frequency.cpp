@@ -10,7 +10,7 @@
 #include <cctype>
 
 // FP in C++ P/156
-// a good recap on the word frequency problem, using only the range library
+// a good reimplementation of the word frequency program, using only the range library
 // constructs: views, actions and algorithms;
 // NOTE:
 // - it provides a useful helper function to create a view from an input stream
