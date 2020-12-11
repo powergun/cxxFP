@@ -5,6 +5,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest/doctest.h"
 #include <optional>
+#include <random>
 #include "../vendor/auto_timer.h"
 
 // FP in c++ P/124
@@ -98,4 +99,41 @@ TEST_CASE( "prof the lazy evaluation" )
             } );
         }
     }
+}
+
+// make_memoized does NOT work with lambda objects
+template < typename Result, typename... Args >
+auto make_memoized( Result ( *f )( Args... ) )
+{
+    using _key_t = std::tuple< Args... >;
+    std::map< _key_t, Result > cache;
+
+    // each lambda returned will have ITS OWN CACHE - very important!!!
+    return [ f, cache ]( Args... args ) mutable -> Result {
+        const auto args_tuple = std::make_tuple( args... );
+        const auto cached = cache.find( args_tuple );
+        if ( cached == cache.end() )
+        {
+            auto result = f( args... );
+            cache[ args_tuple ] = result;
+            return result;
+        }
+        else
+        {
+            return cached->second;
+        }
+    };
+}
+
+size_t withEffect( size_t x )
+{
+    std::random_device rd;
+    std::mt19937 g( rd() );
+    return g() * x;
+}
+
+TEST_CASE( "make_memoized (freezing the effect)" )
+{
+    auto f = make_memoized( withEffect );
+    CHECK_EQ( f( 10 ), f( 10 ) );
 }
