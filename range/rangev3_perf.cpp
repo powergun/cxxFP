@@ -2,6 +2,10 @@
 // Created by weining on 12/5/20.
 //
 
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+
+#include "doctest/doctest.h"
+
 #include <vector>
 #include <algorithm>
 #include <string>
@@ -11,8 +15,7 @@
 #include <iomanip>
 #include <random>
 
-#include <range/v3/view/transform.hpp>
-#include <range/v3/view/filter.hpp>
+#include <range/v3/all.hpp>
 #include "../vendor/auto_timer.h"
 
 template < typename F >
@@ -32,8 +35,9 @@ void stl_algorithm( std::vector< int > &v, std::vector< int > &not_used )
             elem = mx;
     };
     for_each( begin( v ), end( v ), f );
-    partition(
-        begin( v ), end( v ), [ mid = v.size() / 2 ]( const auto &elem ) { return elem < mid; } );
+    partition( begin( v ), end( v ), [ mid = v.size() / 2 ]( const auto &elem ) {
+        return elem < mid;
+    } );
 }
 
 void range_algorithm( std::vector< int > &v, std::vector< int > &o_v )
@@ -45,9 +49,9 @@ void range_algorithm( std::vector< int > &v, std::vector< int > &o_v )
             return mx;
         return elem;
     };
-    auto v_ =
-        v | ranges::views::transform( f )
-        | ranges::views::filter( [ half = v.size() / 2 ]( const auto &n ) { return n < half; } );
+    auto v_ = v | ranges::views::transform( f )
+              | ranges::views::filter(
+                  [ half = v.size() / 2 ]( const auto &n ) { return n < half; } );
     std::copy( begin( v_ ), end( v_ ), begin( o_v ) );
 }
 
@@ -59,11 +63,40 @@ void populate( std::vector< int > &v )
         std::begin( v ), std::end( v ), [ &dist, &engine ]() { return dist( engine ); } );
 }
 
-int main()
+TEST_CASE( "simple comparison" )
 {
     std::vector< int > v( 1000000 );
     std::vector< int > o( 1000000 );
     populate( v );
     prof( v, o, stl_algorithm, "stl algorithm" );
     prof( v, o, range_algorithm, "range algorithm" );
+}
+
+TEST_CASE( "read only operation and immutable data" )
+{
+    // range wins:
+    //
+    //   readonly operator and immutable data: stl 266,566 micro-secs
+    //  readonly operator and immutable data: range 11,693 micro-secs
+    //
+    using namespace ranges;
+    constexpr size_t n = 1000000;
+    std::vector< int > xs( n, 999 );
+    {  // stl
+        AutoTimer atm( "readonly operator and immutable data: stl" );
+        auto os = xs | views::filter( []( const auto &x ) { return x > 100; } )
+                  | to< std::vector< int > >();
+        CHECK_EQ( os.size(), n );
+    }
+    {
+        std::vector< int > os( xs.size() );
+        {
+            // range
+            AutoTimer atm( "readonly operator and immutable data: range" );
+            std::copy_if( xs.cbegin(), xs.cend(), os.begin(), []( const auto &x ) {
+                return x > 100;
+            } );
+            CHECK_EQ( os.size(), n );
+        }
+    }
 }
