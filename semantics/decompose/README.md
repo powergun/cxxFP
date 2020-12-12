@@ -1,4 +1,4 @@
-# Pattern Matching (Structured Binding)
+# Decompose (Structured Binding)
 
 work efficiently with tuple and array
 

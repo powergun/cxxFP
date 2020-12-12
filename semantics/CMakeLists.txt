@@ -1,5 +1,5 @@
 add_subdirectory(higher_order)
-add_subdirectory(pattern_matching)
+add_subdirectory(decompose)
 add_subdirectory(recursion)
 
 add_executable(composition_compose compose.cpp)
