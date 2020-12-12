@@ -37,6 +37,11 @@ using SecurityLock = std::variant< AdminLock, UserLock, OperatorLock >;
 // the function object must implement different overloads for ALL the
 // possible types the variant can hold
 //
+// FP in C++ P/180
+// variant is a type-safe union
+// variant<...> is big enough to fit an instance of an of the summed types
+// inside.
+
 struct ProcessResult
 {
     bool ok{ true };
@@ -62,6 +67,13 @@ struct ProcessSecurityLock
         return {};
     }
 };
+
+TEST_CASE( "is_xxx: check whether the variant holds a particular instance" )
+{
+    SecurityLock l{ AdminLock{} };
+    CHECK( std::get_if< AdminLock >( &l ) );
+    CHECK_FALSE( std::get_if< UserLock >( &l ) );
+}
 
 TEST_CASE( "the FP-way of dealing with variant" )
 {

@@ -1,5 +1,12 @@
 # Product Type
 
+std::tuple and std::pair are useful generic types for creating quick-and-dirty
+product types;
+
+one of the most useful features of pairs and tuples is that, when you create
+product types with them, you get **lexicographical comparison** operators for
+free.
+
 ## Tuple
 
 C++ template: complete guide dedicates chapter 24 on TypeList - a type-level data 

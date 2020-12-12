@@ -6,9 +6,9 @@
 
 #include "doctest/doctest.h"
 
-#include "neither/either.hpp"
-#include "neither/try.hpp"
-#include "neither/maybe.hpp"
+#include <neither/either.hpp>
+#include <neither/try.hpp>
+#include <neither/maybe.hpp>
 
 #include <vector>
 #include <string>

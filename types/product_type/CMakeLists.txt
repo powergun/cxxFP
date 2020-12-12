@@ -15,4 +15,6 @@ add_executable(product_type_tuple_algorithms tuple_algorithms.cpp)
 target_link_libraries(product_type_tuple_algorithms PRIVATE doctest)
 add_test(NAME "product-type::tuple-algorithms" COMMAND product_type_tuple_algorithms)
 
-
+add_executable(product_type_tuple_tie tuple_tie.cpp)
+target_link_libraries(product_type_tuple_tie PRIVATE doctest)
+add_test(NAME "product-type::tuple_tie" COMMAND product_type_tuple_tie)

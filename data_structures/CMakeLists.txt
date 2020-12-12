@@ -2,6 +2,10 @@ add_subdirectory(maybe)
 add_subdirectory(range)
 add_subdirectory(stream)
 
+add_executable(either_simple either_simple.cpp)
+target_link_libraries(either_simple PRIVATE doctest neither)
+add_test(NAME "ds::either::simple_impl" COMMAND either_simple)
+
 add_executable(either_exception_handling either_exception.cpp)
 target_link_libraries(either_exception_handling PRIVATE doctest neither)
 add_test(NAME "ds::either::exception-handling" COMMAND either_exception_handling)
