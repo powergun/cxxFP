@@ -56,7 +56,7 @@ TEST_CASE( "warm-up 2: tuple decomposition in STL algorithms (requires c++17)" )
 TEST_CASE( "warm-up 2b: tuple decomposition while iterating over a map" )
 {
     // its official term is structured binding
-    
+
     auto dict = ranges::zip_view( ranges::views::ints( 0, ranges::unreachable ),
                                   std::vector< std::string >{ "e", "1", "m", "1" } )
                 | ranges::to< std::unordered_map< int, std::string > >();
