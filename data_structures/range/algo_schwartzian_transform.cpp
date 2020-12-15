@@ -16,6 +16,11 @@
 // with the range api, it is possible to construct schwartzian transform
 // https://en.wikipedia.org/wiki/Schwartzian_transform
 //
+// take away notes:
+// - the c++20 string-splitting technique:
+// http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p2210r0.html
+// - ranges::group_by works on adjacent elements
+// - use ranges::to_vector to yield an actionable vector for the actions
 
 TEST_CASE( "using stl" )
 {
@@ -121,4 +126,50 @@ TEST_CASE( "use range-v3 library" )
     // TypeTester<decltype(s)>();
     // std::cout << '<' << s << '>' << '\n';
     // }
+}
+
+template < std::ranges::range R >
+auto to_vector( R &&r )
+{
+    auto r_common = r | std::views::common;
+    return std::vector( r_common.begin(), r_common.end() );
+}
+
+TEST_CASE( "use c++20 ranges api" )
+{
+    // there is no group_by function offered by STL, therefore I have to introduce
+    // a temporary dictionary
+    
+    std::string s{ "there  is   a cow  there     is a  silence  " };
+    auto xs =
+        to_vector( s | std::views::split( ' ' )
+                   | std::views::filter( []( const auto &v ) { return !v.empty(); } )
+                   | std::views::transform( []( const auto &v ) {
+                         // borrowing the same logic as in to_vector()
+                         auto r_common = v | std::views::common;
+                         return std::string( r_common.begin(), r_common.end() );
+                     } ) );
+    std::ranges::sort( xs );
+    std::unordered_map< std::string, size_t > dict;
+    std::ranges::for_each(
+        xs, [ &dict, curr = std::string{}, count = 0 ]( const auto &x ) mutable {
+            if ( curr != x )
+            {
+                curr = x;
+                count = 1;
+            }
+            else
+            {
+                count += 1;
+            }
+            dict[ curr ] = count;
+        } );
+    auto ys = to_vector( dict | std::views::transform( []( const auto &pr ) {
+                             return std::make_pair( pr.second, pr.first );
+                         } ) );
+    std::ranges::sort( ys );
+    for ( const auto &[ count, word ] : ys )
+    {
+        std::cout << word << ": " << count << '\n';
+    }
 }

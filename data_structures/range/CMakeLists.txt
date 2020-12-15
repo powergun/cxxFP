@@ -29,8 +29,9 @@ add_executable(range_algorithm_schwartzian_transform algo_schwartzian_transform.
 target_link_libraries(range_algorithm_schwartzian_transform PRIVATE doctest range-v3)
 add_test(NAME "range::algorithm::perl_schwartzian_transform" COMMAND range_algorithm_schwartzian_transform)
 
-
-
+add_executable(range_algorithm_to_vector algo_cxx20_to_vector.cpp)
+target_link_libraries(range_algorithm_to_vector PRIVATE doctest range-v3)
+add_test(NAME "range::algorithm::(the missing)to_vector" COMMAND range_algorithm_to_vector)
 
 
 
