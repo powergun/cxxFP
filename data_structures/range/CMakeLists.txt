@@ -15,15 +15,15 @@ add_test(NAME "range::factory::istream_range" COMMAND range_factory_istream_rang
 #######################################################
 # range-based algorithms
 
-add_executable(range_count_elems count_elems.cpp)
-target_link_libraries(range_count_elems PRIVATE doctest ${Boost_LIBRARIES})
-target_include_directories(range_count_elems PRIVATE ${Boost_INCLUDE_DIRS})
-add_test(NAME "range:count-elems" COMMAND range_count_elems)
+add_executable(range_algorithm_count_elems count_elems.cpp)
+target_link_libraries(range_algorithm_count_elems PRIVATE doctest ${Boost_LIBRARIES} range-v3)
+target_include_directories(range_algorithm_count_elems PRIVATE ${Boost_INCLUDE_DIRS})
+add_test(NAME "range::algorithm::count-elems" COMMAND range_algorithm_count_elems)
 
-add_executable(range_copy_elems copy_elems.cpp)
-target_link_libraries(range_copy_elems PRIVATE doctest ${Boost_LIBRARIES})
-target_include_directories(range_copy_elems PRIVATE ${Boost_INCLUDE_DIRS})
-add_test(NAME "range:copy-elems" COMMAND range_copy_elems)
+add_executable(range_algorithm_copy_elems algo_copy_elems.cpp)
+target_link_libraries(range_algorithm_copy_elems PRIVATE doctest ${Boost_LIBRARIES} range-v3)
+target_include_directories(range_algorithm_copy_elems PRIVATE ${Boost_INCLUDE_DIRS})
+add_test(NAME "range::algorithm::copy-elems" COMMAND range_algorithm_copy_elems)
 
 add_executable(range_adapter_filter adapter_filter.cpp)
 target_link_libraries(range_adapter_filter PRIVATE doctest ${Boost_LIBRARIES})
