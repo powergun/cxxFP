@@ -15,7 +15,7 @@ add_test(NAME "range::factory::istream_range" COMMAND range_factory_istream_rang
 #######################################################
 # range-based algorithms
 
-add_executable(range_algorithm_count_elems count_elems.cpp)
+add_executable(range_algorithm_count_elems algo_count_elems.cpp)
 target_link_libraries(range_algorithm_count_elems PRIVATE doctest ${Boost_LIBRARIES} range-v3)
 target_include_directories(range_algorithm_count_elems PRIVATE ${Boost_INCLUDE_DIRS})
 add_test(NAME "range::algorithm::count-elems" COMMAND range_algorithm_count_elems)
@@ -24,6 +24,15 @@ add_executable(range_algorithm_copy_elems algo_copy_elems.cpp)
 target_link_libraries(range_algorithm_copy_elems PRIVATE doctest ${Boost_LIBRARIES} range-v3)
 target_include_directories(range_algorithm_copy_elems PRIVATE ${Boost_INCLUDE_DIRS})
 add_test(NAME "range::algorithm::copy-elems" COMMAND range_algorithm_copy_elems)
+
+add_executable(range_algorithm_schwartzian_transform algo_schwartzian_transform.cpp)
+target_link_libraries(range_algorithm_schwartzian_transform PRIVATE doctest range-v3)
+add_test(NAME "range::algorithm::perl_schwartzian_transform" COMMAND range_algorithm_schwartzian_transform)
+
+
+
+
+
 
 add_executable(range_adapter_filter adapter_filter.cpp)
 target_link_libraries(range_adapter_filter PRIVATE doctest ${Boost_LIBRARIES})
@@ -49,10 +58,6 @@ add_test(NAME "range::map-as-pipe" COMMAND range_map_as_pipe)
 add_executable(range_map_filter_composing map_filter_composing.cpp)
 target_link_libraries(range_map_filter_composing PRIVATE doctest range-v3)
 add_test(NAME "range::map-filter-composing" COMMAND range_map_filter_composing)
-
-add_executable(range_schwartzian_transform schwartzian_transform.cpp)
-target_link_libraries(range_schwartzian_transform PRIVATE doctest range-v3)
-add_test(NAME "range::perl_schwartzian_transform" COMMAND range_schwartzian_transform)
 
 add_executable(range_actions range_actions.cpp)
 target_link_libraries(range_actions PRIVATE doctest range-v3)
