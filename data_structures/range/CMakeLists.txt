@@ -8,7 +8,7 @@ target_include_directories(range_factory_iota PRIVATE ${Boost_INCLUDE_DIRS})
 add_test(NAME "range::factory::iota" COMMAND range_factory_iota)
 
 add_executable(range_factory_istream_range factory_istream_range.cpp)
-target_link_libraries(range_factory_istream_range PRIVATE doctest ${Boost_LIBRARIES})
+target_link_libraries(range_factory_istream_range PRIVATE doctest ${Boost_LIBRARIES} range-v3)
 target_include_directories(range_factory_istream_range PRIVATE ${Boost_INCLUDE_DIRS})
 add_test(NAME "range::factory::istream_range" COMMAND range_factory_istream_range)
 

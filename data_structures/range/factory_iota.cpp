@@ -9,6 +9,7 @@
 #include <ranges>
 #include <numeric>
 #include <utility>
+#include <algorithm>
 
 #include <range/v3/all.hpp>
 
@@ -50,7 +51,8 @@ TEST_CASE( "irange: generator" )
         CHECK_EQ( m[ 2 ], 2 );
     }
     {
-        // range-v3
+        // range-v3; also use c++20 algorithm::ranges
+        // see this page: https://en.cppreference.com/w/cpp/algorithm/ranges/copy
         auto m2 = ranges::iota_view{ 0, 10 }
                   // [T] -> [Pair<T, T>]
                   // note that Pair's ctor automatically deduce T from its arguments
@@ -59,8 +61,8 @@ TEST_CASE( "irange: generator" )
                     } )
                   // [Pair<T, T>] -> Map<T, T>
                   | ranges::to< std::map< int, int > >();
-        CHECK_EQ( 55, boost::max_element( m2 )->second );
-        CHECK_EQ( boost::min_element( m2 )->second, m2[ 1 ] );
+        CHECK_EQ( 55, std::ranges::max_element( m2 )->second );
+        CHECK_EQ( std::ranges::min_element( m2 )->second, m2[ 1 ] );
         CHECK_EQ( m2[ 2 ], 2 );
     }
     {
