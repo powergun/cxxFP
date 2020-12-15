@@ -9,6 +9,7 @@
 #include <range/v3/all.hpp>
 #include <iostream>
 
+#include <unordered_map>
 #include <ranges>
 
 // FP in C++ P/151
@@ -50,6 +51,20 @@ TEST_CASE( "warm-up 2: tuple decomposition in STL algorithms (requires c++17)" )
             return acc + b;
         } );
     CHECK_EQ( o, 6 );
+}
+
+TEST_CASE( "warm-up 2b: tuple decomposition while iterating over a map" )
+{
+    // its official term is structured binding
+    
+    auto dict = ranges::zip_view( ranges::views::ints( 0, ranges::unreachable ),
+                                  std::vector< std::string >{ "e", "1", "m", "1" } )
+                | ranges::to< std::unordered_map< int, std::string > >();
+    std::unordered_map< int, std::string > dict2{ { 1, "1" }, { 2, "2" } };
+    for ( const auto &[ k, v ] : dict )
+    {
+        std::cout << k << ": " << v << '\n';
+    }
 }
 
 TEST_CASE( "infinite range and view-zip" )
