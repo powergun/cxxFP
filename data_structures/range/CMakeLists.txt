@@ -1,4 +1,20 @@
 
+#######################################################
+# producing ranges; factory
+
+add_executable(range_factory_iota factory_iota.cpp)
+target_link_libraries(range_factory_iota PRIVATE doctest ${Boost_LIBRARIES} range-v3)
+target_include_directories(range_factory_iota PRIVATE ${Boost_INCLUDE_DIRS})
+add_test(NAME "range::factory::iota" COMMAND range_factory_iota)
+
+add_executable(range_factory_istream_range factory_istream_range.cpp)
+target_link_libraries(range_factory_istream_range PRIVATE doctest ${Boost_LIBRARIES})
+target_include_directories(range_factory_istream_range PRIVATE ${Boost_INCLUDE_DIRS})
+add_test(NAME "range::factory::istream_range" COMMAND range_factory_istream_range)
+
+#######################################################
+# range-based algorithms
+
 add_executable(range_count_elems count_elems.cpp)
 target_link_libraries(range_count_elems PRIVATE doctest ${Boost_LIBRARIES})
 target_include_directories(range_count_elems PRIVATE ${Boost_INCLUDE_DIRS})
@@ -13,15 +29,6 @@ add_executable(range_adapter_filter adapter_filter.cpp)
 target_link_libraries(range_adapter_filter PRIVATE doctest ${Boost_LIBRARIES})
 target_include_directories(range_adapter_filter PRIVATE ${Boost_INCLUDE_DIRS})
 add_test(NAME "range:adapter-filter" COMMAND range_adapter_filter)
-
-add_executable(range_irange irange.cpp)
-target_link_libraries(range_irange PRIVATE doctest ${Boost_LIBRARIES})
-target_include_directories(range_irange PRIVATE ${Boost_INCLUDE_DIRS})
-add_test(NAME "range:irange-python-range" COMMAND range_irange)
-
-add_executable(range_irange_stdin irange_stdin.cpp)
-target_link_libraries(range_irange_stdin PRIVATE doctest ${Boost_LIBRARIES})
-target_include_directories(range_irange_stdin PRIVATE ${Boost_INCLUDE_DIRS})
 
 add_executable(range_range_v3 rangev3.cpp)
 target_link_libraries(range_range_v3 PRIVATE doctest range-v3)
