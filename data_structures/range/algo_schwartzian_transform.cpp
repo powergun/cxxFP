@@ -19,8 +19,10 @@
 // take away notes:
 // - the c++20 string-splitting technique:
 // http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p2210r0.html
-// - ranges::group_by works on adjacent elements
+// - ranges::group_by works on adjacent elements: A A B B B C C C ...
 // - use ranges::to_vector to yield an actionable vector for the actions
+
+// see: algo_word_frequency.cpp for a cleaner range-v3 based implementation
 
 TEST_CASE( "using stl" )
 {

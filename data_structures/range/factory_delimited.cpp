@@ -9,6 +9,8 @@
 #include <range/v3/all.hpp>
 #include <iostream>
 
+#include <ranges>
+
 // FP in C++ P/151
 // the "end" iterator is a special value, called sentinel;
 // it gives you more freedom when implementing a test for whether you have
@@ -69,9 +71,21 @@ TEST_CASE( "infinite range and view-zip" )
                 } )
               | views::take( 2 ) | to< std::vector< int > >();
     CHECK_EQ( ns, std::vector< int >{ -100, -99 } );
+    {
+        // c++20 ranges api
+        // views::zip was not selected by the standard, therefore I have to use a
+        // workaround to iterate over two ranges (internal mutability)
+        auto v1 = std::ranges::iota_view{ -100, std::numeric_limits< long long >::max() }
+                  | std::views::transform( [ idx = 0 ]( const auto &x ) mutable {
+                        return std::make_pair( idx++, x );
+                    } )
+                  | std::views::take( 2 );
+        auto xs = std::vector( v1.begin(), v1.end() );
+        CHECK_EQ( xs[ 0 ].second, -100 );
+    }
 }
 
-TEST_CASE( "range-based for loop and range-view" )
+TEST_CASE( "range-based for loop and range-view (updated with c++20 syntax)" )
 {
     using namespace ranges;
     /**
@@ -81,6 +95,13 @@ TEST_CASE( "range-based for loop and range-view" )
     for ( const auto &x : views::ints( 1, 10 ) )
     {
         // do stuffs...
+    }
+    {
+        // c++20 ranges api
+        for ( const std::weakly_incrementable auto &x : std::ranges::iota_view{ 0, 3 } )
+        {
+            // do stuffs
+        }
     }
 
     // some important data to be processed in an array-like fashion
@@ -94,4 +115,27 @@ TEST_CASE( "range-based for loop and range-view" )
         std::cout << idx << x << ' ';
     }
     std::cout << '\n';
+
+    {
+        // c++20 ranges api
+        std::ranges::for_each( std::ranges::iota_view{ 9, 12 },
+                               [ idx = 0 ]( const auto &x ) mutable {
+                                   // do stuffs with idx and x
+                                   idx++;
+                               } );
+
+        // or use the c++20 new feature: initialize an auxiliary value in the range-
+        // based for-loop
+        for ( int idx = 0, sentinel = 12;
+              const std::weakly_incrementable auto &x : std::ranges::iota_view{ 9, 12 } )
+        {
+            // do stuffs with idx and x
+            // idx could even be an iterator to another collection.
+            if ( idx >= sentinel )
+            {
+                break;
+            }
+            idx++;
+        }
+    }
 }

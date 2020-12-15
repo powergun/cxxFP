@@ -12,6 +12,10 @@ target_link_libraries(range_factory_istream_range PRIVATE doctest ${Boost_LIBRAR
 target_include_directories(range_factory_istream_range PRIVATE ${Boost_INCLUDE_DIRS})
 add_test(NAME "range::factory::istream_range" COMMAND range_factory_istream_range)
 
+add_executable(range_factory_delimited_range factory_delimited.cpp)
+target_link_libraries(range_factory_delimited_range PRIVATE doctest range-v3)
+add_test(NAME "range::factory::delimited_ranges" COMMAND range_factory_delimited_range)
+
 #######################################################
 # range-based algorithms
 
@@ -25,20 +29,24 @@ target_link_libraries(range_algorithm_copy_elems PRIVATE doctest ${Boost_LIBRARI
 target_include_directories(range_algorithm_copy_elems PRIVATE ${Boost_INCLUDE_DIRS})
 add_test(NAME "range::algorithm::copy-elems" COMMAND range_algorithm_copy_elems)
 
+add_executable(range_algorithm_filter_elements algo_filter_elems.cpp)
+target_link_libraries(range_algorithm_filter_elements PRIVATE doctest ${Boost_LIBRARIES} range-v3)
+target_include_directories(range_algorithm_filter_elements PRIVATE ${Boost_INCLUDE_DIRS})
+add_test(NAME "range::algorithm::filter_elements" COMMAND range_algorithm_filter_elements)
+
 add_executable(range_algorithm_schwartzian_transform algo_schwartzian_transform.cpp)
 target_link_libraries(range_algorithm_schwartzian_transform PRIVATE doctest range-v3)
 add_test(NAME "range::algorithm::perl_schwartzian_transform" COMMAND range_algorithm_schwartzian_transform)
+
+add_executable(range_algorithm_word_frequency algo_word_frequency.cpp)
+target_link_libraries(range_algorithm_word_frequency PRIVATE doctest range-v3)
+add_test(NAME "range::algorithm::word_frequency_views_actions" COMMAND range_algorithm_word_frequency)
 
 add_executable(range_algorithm_to_vector algo_cxx20_to_vector.cpp)
 target_link_libraries(range_algorithm_to_vector PRIVATE doctest range-v3)
 add_test(NAME "range::algorithm::(the missing)to_vector" COMMAND range_algorithm_to_vector)
 
 
-
-add_executable(range_adapter_filter adapter_filter.cpp)
-target_link_libraries(range_adapter_filter PRIVATE doctest ${Boost_LIBRARIES})
-target_include_directories(range_adapter_filter PRIVATE ${Boost_INCLUDE_DIRS})
-add_test(NAME "range:adapter-filter" COMMAND range_adapter_filter)
 
 add_executable(range_range_v3 rangev3.cpp)
 target_link_libraries(range_range_v3 PRIVATE doctest range-v3)
@@ -63,11 +71,3 @@ add_test(NAME "range::map-filter-composing" COMMAND range_map_filter_composing)
 add_executable(range_actions range_actions.cpp)
 target_link_libraries(range_actions PRIVATE doctest range-v3)
 add_test(NAME "range::actions" COMMAND range_actions)
-
-add_executable(range_delimited range_delimited.cpp)
-target_link_libraries(range_delimited PRIVATE doctest range-v3)
-add_test(NAME "range::delimited_ranges" COMMAND range_delimited)
-
-add_executable(range_word_frequency word_frequency.cpp)
-target_link_libraries(range_word_frequency PRIVATE doctest range-v3)
-add_test(NAME "range::word_frequency_views_actions" COMMAND range_word_frequency)
