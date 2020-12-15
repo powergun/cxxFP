@@ -9,6 +9,9 @@
 #include "../../vendor/auto_timer.h"
 #include <range/v3/all.hpp>
 
+#include <ranges>
+#include <algorithm>
+
 // FP in C++ P/150
 // range-actions are operations that mutate the source collection;
 // it is the counterpart of view (read-only)
@@ -24,20 +27,30 @@ inline auto makeVecRand( size_t num, int mi, int mx )
     return xs;
 }
 
-TEST_CASE( "perf comparison: sort by range-actions v.s. sort by std::sort" )
+TEST_CASE( "perf comparison sort by range-actions vs sort by STL sort" )
 {
     // it is almost a draw:
-    //
-    // sort by range-actions 36,829 micro-secs
-    //   sort by std::sort() 24,174 micro-secs
+    // (however c++20 ranges api is much slower)
+
+    //   sort by range v3 actions  41,755 micro-secs
+    //   sort by c++20 ranges api 112,095 micro-secs
+    //   sort by std::sort()       26,439 micro-secs
     {
         std::vector< int > xs = makeVecRand( 100000, 1, 9999 );
         {
             // NOTE: range-action can not handle std::list, which does not have a
             // rand-access iterator
-            AutoTimer atm( "sort by range-actions" );
+            AutoTimer atm( "sort by range v3 actions" );
             using namespace ranges;
             xs = std::move( xs ) | actions::sort;
+        }
+        CHECK_EQ( *xs.cbegin(), 1 );
+    }
+    {
+        std::vector< int > xs = makeVecRand( 100000, 1, 9999 );
+        {
+            AutoTimer atm( "sort by c++20 ranges api" );
+            std::ranges::sort( xs );
         }
         CHECK_EQ( *xs.cbegin(), 1 );
     }

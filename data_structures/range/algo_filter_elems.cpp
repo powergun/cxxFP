@@ -15,6 +15,7 @@
 
 #include <range/v3/all.hpp>
 #include <ranges>
+#include <algorithm>
 
 TEST_CASE( "filter range using boost range v3 and cxx20" )
 {
@@ -35,5 +36,17 @@ TEST_CASE( "filter range using boost range v3 and cxx20" )
     {
         // range-v3
         std::ostringstream oss;
+        ranges::copy(
+            arr | ranges::views::filter( []( const auto &x ) { return x > 10; } ),
+            std::ostream_iterator< int >{ oss, "" } );
+        CHECK_EQ( "60", oss.str() );
+    }
+    {
+        // c++20 ranges api
+        std::ostringstream oss;
+        std::ranges::copy(
+            arr | std::views::filter( []( const auto &x ) { return x > 10; } ),
+            std::ostream_iterator< int >{ oss, "" } );
+        CHECK_EQ( "60", oss.str() );
     }
 }

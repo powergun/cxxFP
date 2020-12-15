@@ -27,13 +27,11 @@
 
 TEST_CASE( "compose transform and filter" )
 {
-    using namespace std;
-
-    vector< int > v{ 1, 2, 3, 4, 5, 6, 7 };
+    std::vector< int > v{ 1, 2, 3, 4, 5, 6, 7 };
     auto v_ = v | ranges::views::transform( []( const auto &n ) { return n * 2; } )
               | ranges::views::filter( []( const auto &n ) { return n > 5; } );
-    copy( begin( v_ ), end( v_ ), ostream_iterator< int >{ cout, " " } );
-    cout << endl;
+    copy( begin( v_ ), end( v_ ), std::ostream_iterator< int >{ std::cout, " " } );
+    std::cout << '\n';
 }
 
 namespace Item
@@ -57,11 +55,9 @@ template < typename T >
 class TT;
 TEST_CASE( "test object life time" )
 {
-    using namespace std;
-
     // without reserve(6), the entire vector will relocate due to the growing size, which
     // triggers object deletion
-    vector< Item > items;
+    std::vector< Item > items;
     items.reserve( 6 );
     items.emplace_back( 0 );
     items.emplace_back( 1 );

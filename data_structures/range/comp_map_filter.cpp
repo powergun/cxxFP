@@ -17,9 +17,10 @@
 
 // the range library overcomes this issue by providing the pipe operator and views
 
-// however this is not a design flaw in STL; the merits of the iterator-based algorithms allow
-// the user to work with different collection types simultaneously; for example the source collection
-// can be a std::unordered_set<> while the dest collection can be a deque.
+// however this is not a design flaw in STL; the merits of the iterator-based algorithms
+// allow the user to work with different collection types simultaneously; for example the
+// source collection can be a std::unordered_set<> while the dest collection can be a
+// deque.
 
 struct Item
 {
@@ -30,7 +31,8 @@ struct Item
     {
     }
 
-    static std::vector< Item > create( std::initializer_list< std::pair< std::string, int > > il )
+    static std::vector< Item > create(
+        std::initializer_list< std::pair< std::string, int > > il )
     {
         std::vector< Item > xs;
         xs.reserve( il.size() );
@@ -42,7 +44,7 @@ struct Item
     }
 };
 
-TEST_CASE( "express filter | map using STL algorithms " )
+TEST_CASE( "express filter map using STL algorithms " )
 {
     auto xs = Item::create( { { "laser blade", 100 },
                               { "rail pistol", 230 },
@@ -51,9 +53,10 @@ TEST_CASE( "express filter | map using STL algorithms " )
 
     std::vector< Item > valuables;
     valuables.reserve( xs.size() );
-    std::copy_if( xs.cbegin(), xs.cend(), std::back_inserter( valuables ), []( const Item &item ) {
-        return item.value > 80;
-    } );
+    std::copy_if(
+        xs.cbegin(), xs.cend(), std::back_inserter( valuables ), []( const Item &item ) {
+            return item.value > 80;
+        } );
 
     std::vector< std::string > itemNames( valuables.size() );
     std::transform(
@@ -65,7 +68,7 @@ TEST_CASE( "express filter | map using STL algorithms " )
     CHECK_EQ( itemNames[ 1 ], "rail pistol" );
 }
 
-TEST_CASE( " express filter | map using range-v3 library" )
+TEST_CASE( " express filter map using range-v3 library" )
 {
     auto xs = Item::create( { { "laser blade", 100 },
                               { "rail pistol", 230 },
@@ -73,7 +76,8 @@ TEST_CASE( " express filter | map using range-v3 library" )
                               { "assault rifle", 50 } } );
 
     using namespace ranges;
-    auto trashes = xs | views::filter( []( const Item &item ) { return item.value < 80; } )
+    auto trashes = xs
+                   | views::filter( []( const Item &item ) { return item.value < 80; } )
                    | views::transform( []( const Item &item ) { return item.name; } )
                    | to< std::vector< std::string > >();
 

@@ -65,6 +65,9 @@ void populate( std::vector< int > &v )
 
 TEST_CASE( "simple comparison" )
 {
+    //   stl algorithm   36,310 micro-secs
+    //  range algorithm 329,027 micro-secs
+
     // NOTE: this is not fair - the version that uses range-v3 also calls std::copy which
     // brings considerable overhead!
     // see the more detailed comparison below under different categories (immut, mut etc.)
@@ -77,26 +80,32 @@ TEST_CASE( "simple comparison" )
 
 TEST_CASE( "read only operation and immutable data" )
 {
-    // range wins:
-    //
-    //     readonly operator and immutable data: stl 259,318 micro-secs
-    //    readonly operator and immutable data: range 11,311 micro-secs
-    // readonly operator and immutable data: for-loop 12,635 micro-secs
+    //  readonly operator and immutable data: range v3         281,766 micro-secs
+    //  readonly operator and immutable data: c++20 ranges api 172,597 micro-secs
+    //  readonly operator and immutable data: stl               15,619 micro-secs
+    //  readonly operator and immutable data: for-loop          14,877 micro-secs
     //
     using namespace ranges;
     constexpr size_t n = 1000000;
     std::vector< int > xs( n, 999 );
-    {  // stl
-        AutoTimer atm( "readonly operator and immutable data: stl" );
+    {  // range v3
+        AutoTimer atm( "readonly operator and immutable data: range v3        " );
         auto os = xs | views::filter( []( const auto &x ) { return x > 100; } )
                   | to< std::vector< int > >();
         CHECK_EQ( os.size(), n );
     }
     {
+        // c++20 ranges api
+        AutoTimer atm( "readonly operator and immutable data: c++20 ranges api" );
+        auto v = xs | std::views::filter( []( const auto &x ) { return x > 100; } );
+        auto os = std::vector( v.begin(), v.end() );
+        CHECK_EQ( os.size(), n );
+    }
+    {
         std::vector< int > os( xs.size() );
         {
-            // range
-            AutoTimer atm( "readonly operator and immutable data: range" );
+            // stl
+            AutoTimer atm( "readonly operator and immutable data: stl           " );
             std::copy_if( xs.cbegin(), xs.cend(), os.begin(), []( const auto &x ) {
                 return x > 100;
             } );
@@ -107,7 +116,7 @@ TEST_CASE( "read only operation and immutable data" )
         std::vector< int > os( xs.size() );
         {
             // raw for-loop
-            AutoTimer atm( "readonly operator and immutable data: for-loop" );
+            AutoTimer atm( "readonly operator and immutable data: for-loop      " );
             auto it = os.begin();
             for ( const auto &x : xs )
             {
