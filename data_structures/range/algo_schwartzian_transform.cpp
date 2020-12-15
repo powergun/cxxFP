@@ -139,7 +139,7 @@ TEST_CASE( "use c++20 ranges api" )
 {
     // there is no group_by function offered by STL, therefore I have to introduce
     // a temporary dictionary
-    
+
     std::string s{ "there  is   a cow  there     is a  silence  " };
     auto xs =
         to_vector( s | std::views::split( ' ' )
