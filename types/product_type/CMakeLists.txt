@@ -18,3 +18,7 @@ add_test(NAME "product-type::tuple-algorithms" COMMAND product_type_tuple_algori
 add_executable(product_type_tuple_tie tuple_tie.cpp)
 target_link_libraries(product_type_tuple_tie PRIVATE doctest)
 add_test(NAME "product-type::tuple_tie" COMMAND product_type_tuple_tie)
+
+add_executable(product_type_structured_binding structured_binding.cpp)
+target_link_libraries(product_type_structured_binding PRIVATE doctest)
+add_test(NAME "product-type::structured_binding" COMMAND product_type_structured_binding)
