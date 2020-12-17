@@ -116,8 +116,12 @@ TEST_CASE( "update std::variant type or value" )
     {
         *pV = 'z';
     }
-    CHECK_EQ( std::get< char >( v ), 'z' );
 
+    // NOTE:
+    // std::variant<> is not an instance of Eq, but Ordered;
+    // I can write variant1 < variant2 which looks at the index then the actual value contained;
+    // however I can not write variant1 == variant2
+    CHECK_EQ( std::get< char >( v ), 'z' );
 
     v.emplace< 0 >( { Item{ 0 } } );  // contain vector<Item> now
 }
