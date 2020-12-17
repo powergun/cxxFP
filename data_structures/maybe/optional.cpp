@@ -5,6 +5,9 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <type_traits>
+#include <complex>
+#include <limits>
 
 using Texts = std::vector< std::string >;
 using Nums = std::vector< int >;
@@ -35,6 +38,89 @@ OptNums conv( const Texts &ts )
         }
     }
     return ns;
+}
+
+TEST_CASE( "create optional values" )
+{
+    // C++ 17 in detail P/77
+
+    // empty
+
+    std::optional< std::string > _empty;
+    // I can explicitly assign an empty value to nullify a non-empty optional value,
+    // recall Rust's take() method
+    std::optional< std::string > _empty_too = std::nullopt;
+
+    // non-empty, direct creation
+
+    using Col = std::vector< int >;
+    std::optional< int > _v1( 1 );
+    std::optional _v2( 2 );  // deduce
+
+    // non-empty, use std::make_optional();
+    // make_optional implements the inplace construction, equivalent to
+    // std::optional x{std::in_place, ...}
+
+    auto _v22 = std::make_optional( 3.0 );
+    auto _v33 = std::make_optional< std::complex< double > >( 3.0, 4.0 );
+
+    // non-empty, in-place
+    // in-place is the only option when the contained resource is NOT movable
+    // or copyable such as std::mutex
+
+    std::optional< Col > _vo{ std::in_place };  // no temp obj; Col is created in-place
+    std::optional< std::complex< double > > _v44{ std::in_place, 3.0, 4.0 };
+    std::optional< Col > _v55{ std::in_place, Col{ 1, 2, 3 } };
+
+    // non-empty, created in the same way as the wrapped value
+
+    std::optional< std::string > _v66{ "idkfa" };
+    std::optional _v77{ Col{ 1, 2 } };  // deduce
+    static_assert( std::is_same_v< decltype( _v77 ), std::optional< Col > > );
+}
+
+template < typename T >
+std::optional< T > fmap( std::optional< T > &&opt )
+{
+    // NOTE: C++20 simplifies the lambda deduction, so I may be able
+    // to turn this free function into a lambda;
+    // see:
+    // https://stackoverflow.com/questions/42799208/perfect-forwarding-in-a-lambda
+
+    // C++ 17 in detail P/82
+    // this also takes advantage of copy-elision
+    if ( std::forward< std::optional< T > >( opt ).has_value()
+         && std::forward< std::optional< T > >( opt ).value() > 0 )
+    {
+        // I can also use optional::value_or()
+        return std::forward< std::optional< T > >( opt ).value() + 1;
+    }
+    else
+    {
+        return std::nullopt;
+    }
+}
+
+TEST_CASE( "returning optional value by returning the wrapped value directly" )
+{
+    CHECK_EQ( fmap( std::optional< int >( 10 ) ), std::optional{ 11 } );
+    CHECK_EQ( fmap( std::optional< int >( -10 ) ), std::optional< int >{} );
+    CHECK_EQ( fmap( std::optional< int >{} ), std::optional< int >{} );
+}
+
+TEST_CASE( "mutate the contained value" )
+{
+    // c++ 17 in detail P/84
+    // emplace, reset, swap and assign
+}
+
+TEST_CASE( "compare the contained value directly " )
+{
+    using O = std::optional< int >;
+    CHECK_LT( O( 1 ), O( 2 ) );
+
+    // empty optional value is always less than any non-empty value
+    CHECK_LT( O(), O( std::numeric_limits< int >::min() ) );
 }
 
 TEST_CASE( "optional: emulate maybe type" )
