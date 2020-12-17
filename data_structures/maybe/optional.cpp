@@ -19,7 +19,8 @@ OptNums conv( const Texts &ts )
     ns.reserve( ts.size() );
     for ( const auto &t : ts )
     {
-        // convert string to int, see: https://www.techiedelight.com/convert-string-to-int-cpp/
+        // convert string to int, see:
+        // https://www.techiedelight.com/convert-string-to-int-cpp/
         try
         {
             ns.emplace_back( std::stoi( t ) );

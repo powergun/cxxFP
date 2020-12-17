@@ -7,6 +7,9 @@
 #include <optional>
 #include <functional>
 
+// it is really tempting to write a generic fmap that works for all STL container types,
+// plus the traversable types (that provide begin() and end()) and optional<> + expect<>
+
 template < typename T >
 struct Maybe
 {
