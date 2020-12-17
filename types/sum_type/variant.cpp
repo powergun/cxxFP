@@ -68,6 +68,60 @@ struct ProcessSecurityLock
     }
 };
 
+struct Item
+{
+    explicit Item( int )
+    {
+        std::cout << "called Item ctor" << '\n';
+        std::cout.flush();
+    }
+};
+
+// C++ 17 in detail P/98
+// similar to std::optional<>, std::variant offers in-place construction
+// mechanism that is useful to model return value;
+// combined with RVO, this is a good built-in optimization
+
+TEST_CASE( "std::variant creation" )
+{
+    using Product = std::variant< std::vector< Item >, int, char >;
+
+    auto f = []( int x ) -> Product {
+        if ( x == 0 )
+        {
+            return Product{ std::in_place_index< 0 >, { Item{ 0 }, Item{ 1 } } };
+        }
+        else if ( x == 1 )
+        {
+            return Product{ std::in_place_index< 1 >, 1 };
+        }
+        else
+        {
+            return Product{ std::in_place_index< 2 >, 'a' };
+        }
+    };
+    // observe RVO: the return value of f() is used to initialize variable `items`,
+    // instead of copying
+    auto items = f( 0 );
+    CHECK_EQ( items.index(), 0 );
+    auto i = f( 1 );
+    auto c = f( 2 );
+}
+
+TEST_CASE( "update std::variant type or value" )
+{
+    using Product = std::variant< std::vector< Item >, int, char >;
+    auto v = Product{ std::in_place_index< 2 >, 'a' };  // char
+    if ( auto pV = std::get_if< char >( &v ); pV )
+    {
+        *pV = 'z';
+    }
+    CHECK_EQ( std::get< char >( v ), 'z' );
+
+
+    v.emplace< 0 >( { Item{ 0 } } );  // contain vector<Item> now
+}
+
 TEST_CASE( "is_xxx: check whether the variant holds a particular instance" )
 {
     SecurityLock l{ AdminLock{} };
