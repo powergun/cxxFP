@@ -6,14 +6,18 @@
 
 #include "doctest/doctest.h"
 
-// NOTE: there are a few examples of structured binding (cxxFP/data_structure/ranges...
-// and in cxxTemplate). This file is the source of truth.
+// NOTE: there are a few examples of structured binding
+//  - cxxFP/data_structure/ranges/factory_delimited
+//  - cxxAlgorithms/map/efficient_map_access
+//  - cxxFP/semantics/decompose/README.md
+// But **this file** is the source of truth.
 
 // C++17 in detail P/56
 // declaring custom get<N> functions
 // use structured binding syntax with classes that contain private data members
 
 #include <utility>
+#include <type_traits>
 
 class Item
 {
@@ -34,6 +38,19 @@ private:
 
 template < std::size_t I >
 auto get( Item &x )
+{
+    if constexpr ( I == 0 )
+    {
+        return x.getA();
+    }
+    else if constexpr ( I == 1 )
+    {
+        return x.getB();
+    }
+}
+
+template < std::size_t I >
+auto get( const Item &x )
 {
     if constexpr ( I == 0 )
     {
@@ -71,7 +88,41 @@ TEST_CASE( "structured binding from immutable instance" )
     Item x{};
     auto &[ a, b ] = x;
 
+    static_assert( std::is_same_v< int, decltype( a ) > );
     a = 133;
-    CHECK_EQ( x.getA(), 0 ); // x is immutable (because of const method)
+    CHECK_EQ( x.getA(), 0 );  // x is immutable (because of const method)
 }
 
+// c++17 the complete guide P/6
+// structured binding types
+template < typename T >
+struct TypeTester;
+TEST_CASE( "structured bindings are of the type of the original member fields" )
+{
+    Item x{};
+    const auto &[ a, b ] = x;
+    static_assert( std::is_same_v< const int, decltype( a ) > );
+    static_assert( std::is_same_v< const float, decltype( b ) > );
+}
+
+// c++ 17 the complete guide P/8
+// with structures and classes, all non-static data members must be members of
+// the same class definition (thus, they have to be direct members of the type
+// or of the same unambiguous public base class) - can not mix-match derived
+// class members with the base class members
+
+TEST_CASE( "assign new values to structured binding for pair and tuple" )
+{
+    // c++ 17 the complete guide P/10
+    // use std::tie to reassign the existing bindings to a new value
+    // this technique can be useful to model a for-loop:
+    // for (auto [a, b] = some_value; b != EOF; std::tie(a, b) = new_value) {
+    // }
+
+    using Item = std::pair< int, int >;
+    auto [ a, b ] = Item{ 1, 1 };
+
+    std::tie( a, b ) = Item{ 2, 2 };
+    CHECK_EQ( a, 2 );
+    CHECK_EQ( b, 2 );
+}
