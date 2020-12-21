@@ -37,7 +37,7 @@ private:
 };
 
 template < std::size_t I >
-auto get( Item &x )
+auto get( Item &x ) // provide mutable binding
 {
     if constexpr ( I == 0 )
     {
@@ -50,7 +50,7 @@ auto get( Item &x )
 }
 
 template < std::size_t I >
-auto get( const Item &x )
+auto get( const Item &x ) // provide immut binding
 {
     if constexpr ( I == 0 )
     {
@@ -90,7 +90,13 @@ TEST_CASE( "structured binding from immutable instance" )
 
     static_assert( std::is_same_v< int, decltype( a ) > );
     a = 133;
-    CHECK_EQ( x.getA(), 0 );  // x is immutable (because of const method)
+
+    // x is immutable (because of const-method and return-by-value)
+    CHECK_EQ( x.getA(), 0 );
+
+    // add these mut-getter method for truly mutable binding:
+    // int& getA()
+    // float& getB()
 }
 
 // c++17 the complete guide P/6
@@ -101,6 +107,8 @@ TEST_CASE( "structured bindings are of the type of the original member fields" )
 {
     Item x{};
     const auto &[ a, b ] = x;
+
+    // a, b are not references
     static_assert( std::is_same_v< const int, decltype( a ) > );
     static_assert( std::is_same_v< const float, decltype( b ) > );
 }
@@ -125,4 +133,11 @@ TEST_CASE( "assign new values to structured binding for pair and tuple" )
     std::tie( a, b ) = Item{ 2, 2 };
     CHECK_EQ( a, 2 );
     CHECK_EQ( b, 2 );
+}
+
+TEST_CASE( "nested binding not supported" )
+{
+    std::pair x{ std::pair( 1, 1 ), 1 };
+    // does not support nested binding
+    // auto &[[x, y], z] = x;
 }
