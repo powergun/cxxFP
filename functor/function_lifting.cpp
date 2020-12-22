@@ -61,7 +61,7 @@ TEST_CASE( "lifting `T -> T` to the context of `M T -> M T`" )
 //
 // given a pure function T -> T, I can create a call-count state monad and its `runState`
 // function:
-// runState: M c -> (ret, M c')
+// runState: T -> M c -> (T, M c')
 // c and c' is the call count before/after a call to T -> T
 
 // this is empowered by the c++ 17 template argument deduction and std::ref()
