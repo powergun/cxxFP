@@ -26,6 +26,9 @@ OptNums conv( const Texts &ts )
         // https://www.techiedelight.com/convert-string-to-int-cpp/
         try
         {
+            // NOTE: c++ 17 std::from_chars() is much faster and provides a type-safe
+            // way to deal with exception
+            // see: https://en.cppreference.com/w/cpp/utility/from_chars
             ns.emplace_back( std::stoi( t ) );
         }
         catch ( std::invalid_argument const &e )
