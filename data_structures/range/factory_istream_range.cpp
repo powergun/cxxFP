@@ -22,6 +22,18 @@
 template < typename T >
 class TypeTester;
 
+TEST_CASE( "use istream_view to take input and stop at the first invalid character" )
+{
+    std::stringstream ss{ "1 2 3 x12 123 ... 13 x11 12312 -- ... 1//" };
+    //                               ^
+    //  operator<<() stops at the first non-numeric character
+    // therefore xs only contains 1, 2, 3
+    auto src = std::ranges::istream_view< int >( ss );
+    std::vector< int > xs;
+    std::ranges::copy( src, std::back_inserter( xs ) );
+    CHECK_EQ( xs, std::vector{ 1, 2, 3 } );
+}
+
 TEST_CASE( "copy the value read from the input stream to a sink (output stream)" )
 {
     // NOTE:
