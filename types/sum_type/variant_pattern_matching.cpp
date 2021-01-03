@@ -59,3 +59,72 @@ TEST_CASE( "demo haskell-like pattern matching" )
     // input pattern falls to the ground; an empty optional value is returned
     CHECK_EQ( Shake{}, shake( Ingredient{ IceCream{} }, Ingredient{ IceCream{} } ) );
 }
+
+template < typename Num >
+struct Constant
+{
+    Num value;
+};
+
+template < typename Num >
+struct Linear
+{
+    Num begin;
+    Num end;
+};
+
+template < typename T >
+using Param = std::variant< Constant< T >, Linear< T > >;
+
+template < typename T >
+Param< T > makeConstant( T x )
+{
+    Constant< T > c{};
+    c.value = x;
+    return c;
+}
+
+template < typename T >
+Param< T > makeLinear( T a, T b )
+{
+    Linear< T > lin{};
+    lin.begin = a;
+    lin.end = b;
+    return lin;
+}
+
+template < typename T >
+T beginV( const Param< T >& param )
+{
+    // NOTE:
+    // I can not use the generic overload() framework here;
+    // it seems that if the variant has a generic type parameter, it will fail to create
+    // the overload callable.
+    // in the production code (autotimer) I ended up using inheritance and virtual function
+    // to model the polymorphism, but the code below also works (same runtime overhead)
+
+    return std::visit(
+        []( const Param< T >& param ) -> T {
+            if ( std::holds_alternative< Constant< T > >( param ) )
+            {
+                return std::get< Constant< T > >( param ).value;
+            }
+            else if ( std::holds_alternative< Linear< T > >( param ) )
+            {
+                return std::get< Linear< T > >( param ).begin;
+            }
+            else
+            {
+                return T{};
+            }
+        },
+        param );
+}
+
+TEST_CASE( "pattern matching when types have generic type parameter" )
+{
+    auto linear = makeLinear( 1, 10 );
+    auto constant = makeConstant( 10 );
+    CHECK_EQ( 10, beginV( constant ) );
+    CHECK_EQ( 1, beginV( linear ) );
+}
