@@ -8,6 +8,7 @@
 #include <any>
 #include <vector>
 #include <algorithm>
+#include <list>
 
 // c++ stl cookbook P/355
 // I don't think std::any expresses the concept of Maybe but it does have the similar
@@ -50,6 +51,11 @@ auto gen( const std::initializer_list< Types > &il )
         }
     }
     return v;
+}
+
+TEST_CASE( "cons-list any" )
+{
+    std::list< std::any > l{ 1, false, 1.0f };
 }
 
 TEST_CASE( "test any as Maybe" )
