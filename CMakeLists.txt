@@ -22,6 +22,9 @@ add_library(neither INTERFACE)
 target_include_directories(neither INTERFACE vendor/neither-0.5.0/neither)
 add_subdirectory(vendor/range-v3)
 
+set(CAF_ROOT ${PROJECT_SOURCE_DIR}/vendor/caf)
+find_package(CAF REQUIRED)
+
 # sub projects:
 
 add_subdirectory(semantics)
@@ -29,3 +32,4 @@ add_subdirectory(types)
 add_subdirectory(functor)
 add_subdirectory(lazy_evaluation)
 add_subdirectory(data_structures)
+add_subdirectory(actors)
