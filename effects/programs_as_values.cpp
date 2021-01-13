@@ -123,9 +123,14 @@ auto succeed() -> Console< void >
     return std::make_shared< Return< void > >();
 }
 
-auto putStrLn( const std::string& line ) -> Console< void >
+// NOTE: unlike the example in the zio tutorial, the return type has to be Console<int>
+// in order to be compatible with flatMap();
+// flatMap() takes a function of R(T), but T can not be `void`;
+// another way to solve this problem is to specialize the flatMap() function template with
+// <void, R> (T = void)
+auto putStrLn( const std::string& line ) -> Console< int >
 {
-    return std::make_shared< PrintLine< void > >( line, succeed() );
+    return std::make_shared< PrintLine< int > >( line, succeed< int >( 0 ) );
 }
 
 template < typename T >
@@ -193,7 +198,7 @@ TEST_CASE( "compose program using generator" )
 
     interpret( putStrLn( "idkfa" ) );
 
-    auto echo = flatMap< std::string, void >(
+    auto echo = flatMap< std::string, int >(
         []( const std::string& l ) -> auto { return putStrLn( l ); },
         readLine< std::string >() );
     interpret( echo );
