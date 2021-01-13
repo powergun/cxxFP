@@ -136,37 +136,38 @@ auto readLine() -> Console< T >
         []( const std::string& line ) -> auto { return succeed< T >( line ); } );
 }
 
-auto flatMap( const std::function< Console< void >( std::string ) >& f,
-              const Console< std::string >& c ) -> Console< void >
+template < typename T, typename R >
+auto flatMap( const std::function< Console< R >( T ) >& f, const Console< T >& c )
+    -> Console< R >
 {
-    if ( std::holds_alternative< PReturn< std::string > >( c ) )
+    if ( std::holds_alternative< PReturn< T > >( c ) )
     {
-        return f( std::get< PReturn< std::string > >( c )->f() );
+        return f( std::get< PReturn< T > >( c )->f() );
     }
-    else if ( std::holds_alternative< PPrintLine< std::string > >( c ) )
+    else if ( std::holds_alternative< PPrintLine< T > >( c ) )
     {
-        const auto& p = std::get< PPrintLine< std::string > >( c );
-        return std::make_shared< PrintLine< void > >( p->line, flatMap( f, p->rest ) );
+        const auto& p = std::get< PPrintLine< T > >( c );
+        return std::make_shared< PrintLine< R > >( p->line, flatMap( f, p->rest ) );
     }
-    else if ( std::holds_alternative< PReadLine< std::string > >( c ) )
+    else if ( std::holds_alternative< PReadLine< T > >( c ) )
     {
-        const auto& r = std::get< PReadLine< std::string > >( c );
-        return std::make_shared< ReadLine< void > >(
+        const auto& r = std::get< PReadLine< T > >( c );
+        return std::make_shared< ReadLine< R > >(
             [ r, f ]( const std::string& line ) -> auto {
                 return flatMap( f, r->f( line ) );
             } );
     }
 
     // to fool the compiler
-    return Console< void >();
+    return Console< R >();
 }
 
-template < typename T, typename R >
-auto map( std::function< R( T ) > f, const Console< T >& c ) -> Console< R >
-{
-    return flatMap< T, R >(
-        [f]( T a ) -> auto { return succeed( f( a ) ); }, c );
-}
+// template < typename T, typename R >
+// auto map( std::function< R( T ) > f, const Console< T >& c ) -> Console< R >
+//{
+//    return flatMap< T, R >(
+//        [f]( T a ) -> auto { return succeed( f( a ) ); }, c );
+//}
 
 TEST_CASE( "compose program using constructors" )
 {
@@ -192,8 +193,8 @@ TEST_CASE( "compose program using generator" )
 
     interpret( putStrLn( "idkfa" ) );
 
-    auto echo = flatMap(
-        []( const std::string& l ) -> Console< void > { return putStrLn( l ); },
+    auto echo = flatMap< std::string, void >(
+        []( const std::string& l ) -> auto { return putStrLn( l ); },
         readLine< std::string >() );
     interpret( echo );
 }
