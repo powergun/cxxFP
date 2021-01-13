@@ -193,6 +193,12 @@ TEST_CASE( "compose program using constructors" )
 
 TEST_CASE( "compose program using generator and flatMap" )
 {
+    // I wasn't able to implement an "operator template" that simulates the
+    // the bind >>= operator; here is one explanation:
+    // https://stackoverflow.com/questions/4014294/operator-overloading-on-class-templates
+    // the fully instantiated operator definition must be known to the
+    // compiler at the call site.
+
     auto s = interpret( readLine< std::string >() );
     CHECK_EQ( "hardcoded input", s );
 
