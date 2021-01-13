@@ -167,12 +167,12 @@ auto flatMap( const std::function< Console< R >( T ) >& f, const Console< T >& c
     return Console< R >();
 }
 
-// template < typename T, typename R >
-// auto map( std::function< R( T ) > f, const Console< T >& c ) -> Console< R >
-//{
-//    return flatMap< T, R >(
-//        [f]( T a ) -> auto { return succeed( f( a ) ); }, c );
-//}
+template < typename T, typename R >
+auto map( std::function< R( T ) > f, const Console< T >& c ) -> Console< R >
+{
+    return flatMap< T, R >(
+        [f]( T a ) -> auto { return succeed( f( a ) ); }, c );
+}
 
 TEST_CASE( "compose program using constructors" )
 {
@@ -191,7 +191,7 @@ TEST_CASE( "compose program using constructors" )
     CHECK_EQ( 0, o );
 }
 
-TEST_CASE( "compose program using generator" )
+TEST_CASE( "compose program using generator and flatMap" )
 {
     auto s = interpret( readLine< std::string >() );
     CHECK_EQ( "hardcoded input", s );
@@ -207,4 +207,12 @@ TEST_CASE( "compose program using generator" )
         []( int ) -> auto { return putStrLn( "there is a cow" ); },
         putStrLn( "there is a silence" ) );
     interpret( doublePrint );
+}
+
+TEST_CASE( "test fmap" )
+{
+    auto s = readLine< std::string >();
+    auto t = map< std::string, size_t >(
+        []( const std::string& s ) -> auto { return std::size( s ); }, s );
+    CHECK_EQ( interpret( t ), 15 );
 }
