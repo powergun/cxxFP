@@ -1,0 +1,3 @@
+add_executable(effects_programs_as_values programs_as_values.cpp)
+target_link_libraries(effects_programs_as_values PRIVATE doctest)
+add_test(NAME "effects::programs_as_effects" COMMAND effects_programs_as_values)
