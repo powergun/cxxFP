@@ -15,6 +15,12 @@
 // inspired by the article `Programs as Values` from the zio document
 // https://zio.dev/docs/overview/overview_background
 
+// the immutable values doesn't do nothing - it just describes a program
+// that prints out a message, asks for input etc...
+// we can translate the model into procedural effects using an interpreter,
+// which recurses on the data structure, translating every instruction
+// into the side-effect that it describes
+
 template < typename T >
 struct Return;
 template < typename T >
@@ -87,6 +93,12 @@ struct ReadLine
     F f;
 };
 
+// interpreting (aka running or executing) is not functional, because it
+// may be partial, non-deterministic and impure.
+// in an ideal application, interpretation only needs to happen once:
+// in the application's main function
+// the rest of the application can be purely functional
+
 template < typename T >
 T interpret( const Console< T >& c )
 {
@@ -122,6 +134,11 @@ auto succeed() -> Console< void >
 {
     return std::make_shared< Return< void > >();
 }
+
+// composing these leaf instructions into larger programs becomes a lot
+// easier if define `map` and `flatMap`
+// (NOTE: I defined these as free functions)
+//
 
 // NOTE: unlike the example in the zio tutorial, the return type has to be Console<int>
 // in order to be compatible with flatMap();
@@ -173,6 +190,13 @@ auto map( std::function< R( T ) > f, const Console< T >& c ) -> Console< R >
     return flatMap< T, R >(
         [f]( T a ) -> auto { return succeed( f( a ) ); }, c );
 }
+
+// FP: instead of interacting with the real world, they build a functional
+// effect, which is nothing more than an immutable, type-safe, tree-like
+// data structure that models procedural effects
+// FP programmers use functional effects to build complex, real world software
+// without giving up the equation reasoning, composability and type safety
+// afforded by pure FP
 
 TEST_CASE( "compose program using constructors" )
 {
