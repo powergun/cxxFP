@@ -202,4 +202,9 @@ TEST_CASE( "compose program using generator" )
         []( const std::string& l ) -> auto { return putStrLn( l ); },
         readLine< std::string >() );
     interpret( echo );
+
+    auto doublePrint = flatMap< int, int >(
+        []( int ) -> auto { return putStrLn( "there is a cow" ); },
+        putStrLn( "there is a silence" ) );
+    interpret( doublePrint );
 }
