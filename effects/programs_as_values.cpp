@@ -18,7 +18,7 @@
 // the immutable values doesn't do nothing - it just describes a program
 // that prints out a message, asks for input etc...
 // we can translate the model into procedural effects using an interpreter,
-// which recurses on the data structure, translating every instruction
+// which recurs on the data structure, translating every instruction
 // into the side-effect that it describes
 
 template < typename T >
@@ -55,6 +55,7 @@ struct Return
     F f;
 };
 
+// specialized for void: it is basically a no-op
 template <>
 struct Return< void >
 {
@@ -102,6 +103,7 @@ struct ReadLine
 template < typename T >
 T interpret( const Console< T >& c )
 {
+    // I tried c++ 17 overloaded lambda technique but it did not type-check
     if ( std::holds_alternative< PReturn< T > >( c ) )
     {
         return std::get< PReturn< T > >( c )->f();
@@ -115,11 +117,16 @@ T interpret( const Console< T >& c )
     else if ( std::holds_alternative< PReadLine< T > >( c ) )
     {
         const auto& r = std::get< PReadLine< T > >( c );
+        // in the real world, this could be reading from std::cin
         return interpret( r->f( "hardcoded input" ) );
     }
     else
     {
-        // C++ compiler does not know pattern matching is exhaustive
+        // C++ compiler does not know pattern matching is exhaustive therefore
+        // I need to add an else-block to trick it to compile;
+        // this code never runs, but it does require T to be default-constructable,
+        // which can be a problem.
+        // alternatively I can use std::variant or std::option
         return T();
     }
 }
@@ -130,15 +137,17 @@ auto succeed( T a ) -> Console< T >
     return std::make_shared< Return< T > >( a );
 }
 
+// for convenience, making it similar to ZIO's version
 auto succeed() -> Console< void >
 {
     return std::make_shared< Return< void > >();
 }
 
-// composing these leaf instructions into larger programs becomes a lot
-// easier if define `map` and `flatMap`
+// functional syntax:
+// these functions are the factory that produces the instances of the effect types above;
+// there are also higher-order functions, such as `map` and `flatMap`, which makes
+// composing these leaf instructions into larger programs lot easier.
 // (NOTE: I defined these as free functions)
-//
 
 // NOTE: unlike the example in the zio tutorial, the return type has to be Console<int>
 // in order to be compatible with flatMap();
@@ -158,6 +167,7 @@ auto readLine() -> Console< T >
         []( const std::string& line ) -> auto { return succeed< T >( line ); } );
 }
 
+// I implement map in terms of flatMap
 template < typename T, typename R >
 auto flatMap( const std::function< Console< R >( T ) >& f, const Console< T >& c )
     -> Console< R >
